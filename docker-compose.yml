@@ -1,0 +1,117 @@
+# docker-compose.yml
+# 最初に読まれる
+
+# バージョン3.8はDockerの19.3.0に対応する
+version: "3.8"
+
+# この中にDB,BE,FEをネストする
+services:
+
+  # データベース
+  db:
+
+    #データベースはMySQLを使う 
+    image: mysql:8.2.0
+
+    # プロジェクトのルートディレクトリ直下に「.envファイル」を作って{}内に代入する
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+
+    # 複数あるMySQLの認証プラグインから指定する。
+    # MySQL 8.0からはデフォルトの認証プラグインがcaching_sha2_passwordになったらしいが、
+    # 古いクライアントアプリケーションとの互換性が保たれるからmysql_native_passwordを使用している。
+    command: --default-authentication-plugin=mysql_native_password
+
+    # Docker上のコンテナの名称
+    container_name: one_drink_db
+
+    # DBを接続するときのポート番号
+    ports:
+      - "3306:3306"
+    
+    # db-dataはボリューム名
+    # Dockerホスト上に作成されるデータ領域を指す。
+    # コンテナ内のディレクトリパス
+    volumes:
+      - db-data:/var/lib/mysql
+
+  # バックエンド
+  backend:
+    
+    # trueにすると仮想のteletypewriterが割り当てられる。
+    # ログをリアルタイムで確認したい時に便利
+    tty: true
+
+    # backend配下にDockerfile置くよって話
+    # ここへきてバックエンドのDockerfileが読まれる。
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+
+    # Railsサーバを立ち上げる。
+    # bind 0.0.0.0でRailsサーバがリッスンするIPアドレスを指定する。
+    # ホストマシンのすべてのIPアドレスからコンテナ内のRailsアプリケーションにアクセスできる。
+    command: rails server -b 0.0.0.0
+
+    # バックエンドのイメージ
+    image: one_drink_backend_image
+
+    # バックエンドの環境変数
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_HOST: ${MYSQL_HOST} # Docker Compose内のdatabaseの項のservices名を使用
+
+    # コンテナの名前
+    container_name: one_drink_backend
+
+    # servicesのbackendがボリュームされる場所
+    volumes:
+      - ./backend:/one_drink
+
+    # Railsサーバを立ち上げるときのポート番号
+    ports:
+      - "3000:3000"
+
+    # backendの依存先
+    # 先にdbが起動するという意味
+    depends_on:
+      - db
+
+  # フロントエンド
+  frontend:
+
+    # frontend配下にDockerfile置くよって話
+    # ここへきてフロントエンドのDockerfileが読まれる。
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile
+
+    # フロントエンドのイメージ
+    image: one_drink_frontend_image
+
+    # コンテナの名前
+    container_name: one_drink_frontend
+
+    # servicesのfrontendがボリュームされる場所
+    volumes:
+      - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules
+
+    # yarnコマンドでNext.jsサーバを立ち上げる。
+    command: "yarn dev"
+
+    # Next.jsサーバを立ち上げるときのポート番号
+    ports:
+      - "8000:3000"
+
+# データの永続化やサービス間でのデータ共有が必要な場合に書く。
+# 今回はservicesの中にだけ書いとけばok
+# 結論いらない
+volumes:
+  db-data:
