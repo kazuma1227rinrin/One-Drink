@@ -1,0 +1,51 @@
+inherit_from: .rubocop_todo.yml
+
+require:
+  - rubocop-performance # 拡張機能
+  - rubocop-rails # 拡張機能
+  - rubocop-rspec # 拡張機能
+  - rubocop-factory_bot # 拡張機能
+
+AllCops:
+  NewCops: enable
+  Exclude:
+    - "bin/*"
+    - "db/**/*"
+    - "tmp/**/*"
+    - "vendor/**/*"
+    - "spec/rails_helper.rb"
+    - "config/environments/*.rb"
+  TargetRubyVersion: 3.2
+  TargetRailsVersion: 7.0
+
+Rails:
+  Enabled: true
+
+## `and return` の形式を利用できるようにします。基本的には、&& と || を使います。
+Style/AndOr:
+  Enabled: false
+
+## 日本語コメントを許可します。
+Style/AsciiComments:
+  Enabled: false
+
+# ハッシュの最終行にカンマを求めます。
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: consistent_comma
+
+# ハッシュリテラル内の最初のキーのインデントを、開始ブレースの位置に関わらず一貫性を持たせるようにします。
+# @see https://docs.rubocop.org/rubocop/cops_layout.html#enforcedstyle-consistent-3
+Layout/FirstHashElementIndentation:
+  EnforcedStyle: consistent
+
+RSpec/ContextWording:
+  Enabled: false
+
+Metrics/AbcSize:
+  Max: 25
+
+Metrics/ClassLength:
+  Max: 80
+
+Metrics/MethodLength:
+  Max: 20

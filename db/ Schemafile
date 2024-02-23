@@ -1,0 +1,136 @@
+create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  t.string "name", null: false, default: '', comment: "ユーザー名"
+  t.string "email", null: false, default: '', comment: "メールアドレス"
+  t.references :company, foreign_key: true
+  t.datetime "created_at", null: false
+  t.datetime "updated_at", null: false
+end
+
+# create_table "companies", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+#   t.string "name", null: false, default: '', comment: "企業名"
+#   t.string "tel", null: false, default: '', comment: "電話番号"
+#   t.string "representativeName", null: false, default: '', comment: "代表者名"
+#   t.string "zipcode", null: false, default: '', comment: "郵便番号"
+#   t.string "prefecture", null: false, default: '', comment: "都道府県"
+#   t.string "city", null: false, default: '', comment: "市区町村"
+#   t.string "blockNumber", null: false, default: '', comment: "町域・番地"
+#   t.string "buildingName", null: false, default: '', comment: "建物名など"
+#   t.integer "storeNumber", null: false, default: 0, comment: "店舗数"
+#   t.string "mainPrefecture", null: false, default: '', comment: "主な都道府県"
+#   t.text "history", comment: "沿革"
+#   t.text "pr", comment: "アピールポイント"
+#   t.string "link", null: false, default: '', comment: "HP等リンク"
+#   t.datetime "created_at", null: false
+#   t.datetime "updated_at", null: false
+# end
+
+# create_table "contacts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+#   t.text "content", comment: "お問い合わせ内容"
+#   t.boolean "is_checked_policy", null: false, default: false, comment: "プライバシーポリシーに同意するかどうか"
+#   t.boolean "is_approved", null: false, default: false, comment: "問い合わせの承認ステータス"
+#   t.references :user, foreign_key: true
+#   t.datetime "created_at", null: false
+#   t.datetime "updated_at", null: false
+# end
+
+# create_table "jobs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+#   t.references :company, foreign_key: true
+#   # section 2. 薬局
+#   t.string "title", comment: "タイトル"
+#   t.string "strength", comment: "アピールポイント"
+#   # section 3. 在宅
+#   t.boolean "is_facility_present", comment: "施設有無"
+#   t.boolean "is_personal", comment: "個人有無"
+#   t.string "at_home_description", comment: "在宅業務内容"
+#   t.integer "at_home_role", comment: "在宅での役割"
+#   t.integer "at_home_future", comment: "今後の在宅"
+#   # section 4. 働き方
+#   t.string "ideal_profile", comment: "求める人物像"
+#   t.string "other_career_path", comment: "その他のキャリアプラン"
+#   t.integer "transfer_requirement", comment: "異動有無"
+#   t.integer "help_requirement", comment: "ヘルプ有無"
+#   t.integer "driver_requirement", comment: "運転有無"
+#   # section 5. 職場環境
+#   t.integer "pharmacist_number", comment: "薬剤師数"
+#   t.integer "assistant_number", comment: "事務員数"
+#   t.integer "shift", comment: "シフトの決め方"
+#   t.integer "women_ratio", comment: "女性の多さ"
+#   t.integer "veteran_ratio", comment: "ベテランの多さ"
+#   t.integer "solidity", comment: "堅実さ"
+#   t.integer "calmness", comment: "穏やかさ"
+#   t.integer "friendly", comment: "人間関係の距離感の近さ"
+#   # section 6. 求人基本情報
+#   t.integer "employment_status", comment: "雇用形態"
+#   t.string "trial_period", comment: "試用期間"
+#   t.string "working_hours", comment: "勤務時間"
+#   t.integer "overtime", comment: "平均残業時間"
+#   t.string "holiday", comment: "休日"
+#   t.string "salary", comment: "給与"
+#   t.string "raise", comment: "昇給"
+#   t.string "paid_holiday", comment: "有休"
+#   t.integer "allowance", comment: "手当"
+#   t.integer "insurance", comment: "保険"
+#   t.string "requirements", comment: "応募条件"
+#   t.string "background", comment: "募集背景"
+#   t.integer "interview", comment: "面談方法"
+#   t.boolean "is_observable", comment: "見学可否"
+#   # section 6. 店舗基本情報
+#   t.string "name", comment: "店舗名"
+#   t.integer "store_type", comment: "業種"
+#   t.string "address", comment: "住所"
+#   t.boolean "is_car_allowed", comment: "車通勤可否"
+#   t.boolean "is_bike_allowed", comment: "自転車通勤可否"
+#   t.string "opening_hours", comment: "営業時間"
+#   t.integer "closed", comment: "休業日"
+#   t.integer "prescriptions", comment: "平均処方箋枚数/日"
+#   t.integer "department", comment: "診療科"
+# end
+
+# # section 1. 写真
+# create_table "pharmacy_images", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+#   t.references :job, foreign_key: true
+#   t.string "path", comment: "パス"
+#   t.integer "order", comment: "順番"
+# end
+
+# # section 2. 薬局
+# create_table "pharmacy_features", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+#   t.string "label", null: false, comment: "特色"
+# end
+
+# add_index :pharmacy_features, :label, unique: true
+
+# create_table "job_pharmacy_features", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+#   t.references :job, foreign_key: true
+#   t.references :pharmacy_feature, foreign_key: true
+# end
+
+# # section 4. 働き方
+# create_table "career_paths", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+#   t.string "label", null: false, comment: "キャリアプラン"
+# end
+
+# add_index :career_paths, :label, unique: true
+
+# create_table "job_career_paths", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+#   t.references :job, foreign_key: true
+#   t.references :career_path, foreign_key: true
+# end
+
+# # section 5. 職場環境
+# create_table "employees", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+#   t.references :job, foreign_key: true
+#   t.string "comment", comment: "社員の一言"
+#   t.string "image", comment: "画像パス"
+# end
+
+# create_table "benefits", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+#   t.string "label", null: false, comment: "福利厚生"
+# end
+
+# add_index :benefits, :label, unique: true
+
+# create_table "job_benefits", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+#   t.references :job, foreign_key: true
+#   t.references :benefit, foreign_key: true
+# end
