@@ -93,43 +93,43 @@ One Drink
 │   ├── tsconfig.json
 │   └── types
 │       └── Todo.ts
-└── backend
-    ├── app
-    │   └── channels
-    │   └── controllers
-    │   └── jobs
-    │   └── mailers
-    │   └── models
-    │   └── views
-    ├── bin
-    │   └── rails
-    │   └── rake
-    │   └── setup
-    ├── config
-    │   └── [アプリケーションの設定ファイル]
-    ├── config.ru
-    ├── db
-    │   └── development.sqlite3
-    │   └── migrate
-    │   └── schema.rb
-    │   └── seeds.rb
-    ├── Gemfile
-    ├── Gemfile.lock
-    ├── lib
-    │   └── tasks
-    ├── log
-    │   └── development.log
-    ├── public
-    │   └── robots.txt
-    ├── Rakefile
-    ├── README.md
-    ├── storage
-    │   └── [アップロードされたファイルのストレージ]
-    ├── tmp
-    │   └── [一時ファイル]
-    └── vendor
-        └── [サードパーティのコード]
-└── .env
+├── backend
+│   ├── app
+│   │   └── channels
+│   │   └── controllers
+│   │   └── jobs
+│   │   └── mailers
+│   │   └── models
+│   │   └── views
+│   ├── bin
+│   │   └── rails
+│   │   └── rake
+│   │   └── setup
+│   ├── config
+│   │   └── [アプリケーションの設定ファイル]
+│   ├── config.ru
+│   ├── db
+│   │   └── development.sqlite3
+│   │   └── migrate
+│   │   └── schema.rb
+│   │   └── seeds.rb
+│   ├── Gemfile
+│   ├── Gemfile.lock
+│   ├── lib
+│   │   └── tasks
+│   ├── log
+│   │   └── development.log
+│   ├── public
+│   │   └── robots.txt
+│   ├── Rakefile
+│   ├── README.md
+│   ├── storage
+│   │   └── [アップロードされたファイルのストレージ]
+│   ├── tmp
+│   │   └── [一時ファイル]
+│   └── vendor
+│       └── [サードパーティのコード]
+├── .env
 └── docker-compose.yml
 </pre>
 
