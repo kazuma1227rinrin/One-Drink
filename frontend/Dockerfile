@@ -13,15 +13,23 @@ FROM base AS dependencies
 RUN yarn install && yarn cache clean
 
 # ---- Copy Files/Build ----
+# ベースイメージとしてdependenciesを使用し、このビルドステージをbuildとして設定
 FROM dependencies AS build 
+# Dockerイメージ内の作業ディレクトリを/usr/src/appに設定
 WORKDIR /usr/src/app
+# 現在のディレクトリの内容を作業ディレクトリにコピー
 COPY . /usr/src/app
+# yarnを使用してアプリケーションをビルド
 RUN yarn build
 
 # --- Release ----
+# ベースイメージとしてbaseを使用し、このリリースステージをreleaseとして設定
 FROM base AS release
+# 依存関係ステージからnode_modulesをコピー
 COPY --from=dependencies /usr/src/app/node_modules ./node_modules
+# ビルドステージからビルド済みの.nextディレクトリをコピー
 COPY --from=build /usr/src/app/.next ./.next
+# プロジェクトのpublicディレクトリをイメージにコピー
 COPY ./public ./public
 
 # コンテナがどのポートで通信を待ち受けるか
