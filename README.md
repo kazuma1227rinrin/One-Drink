@@ -49,7 +49,7 @@ One Drink
 | Next.js               | 14.0.4     |
 | Ruby                  | 3.1.4      |
 | Rails                 | 7.0.8      |
-| Docler                | 24.0.7     |
+| Docker                | 24.0.7     |
 
 その他のパッケージのバージョンは pyproject.toml と package.json を参照してください
 
