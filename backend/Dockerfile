@@ -19,8 +19,7 @@
     COPY Gemfile.lock /one_drink/Gemfile.lock
     
     # gem updateは必要ない # bundle installを実行したらgemファイルはアップデートされるから？
-    RUN gem update && \
-        bundle install
+    RUN gem update && bundle install
     COPY . /one_drink
 
 # Runtime stage
