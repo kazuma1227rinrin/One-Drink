@@ -10,6 +10,7 @@ const Sdiv = styled.div`
 `
 
 export const GetAnalysis=()=>{
+
     return(
         <Sdiv>
             <Link href="/Result">

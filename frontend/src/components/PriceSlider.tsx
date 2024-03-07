@@ -3,7 +3,7 @@ import {styled} from "styled-components";
 import { Box, Slider, SliderTrack, SliderFilledTrack, SliderThumb } from '@chakra-ui/react';
 
 export const PriceSlider = () => {
-    const [value, setValue] = React.useState(400);
+    const [value, setValue] = React.useState(1000);
 
     return (
       <>
@@ -12,7 +12,7 @@ export const PriceSlider = () => {
             <Slider
                 colorScheme='green'
                 aria-label="price-range"
-                defaultValue={400}
+                defaultValue={1000}
                 min={400}
                 max={2000}
                 step={100}
