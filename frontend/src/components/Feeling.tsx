@@ -8,7 +8,7 @@ export const Feeling=()=>{
     const handleButtonClick = (button) => {
         setActiveButton(button); // 押されたボタンをアクティブにする
     };
-    
+
     return(
         <>
             <Sdiv>

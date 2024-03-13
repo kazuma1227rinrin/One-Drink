@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ['latin'] });
 export default function Home() {
   return (
     <>
-      <Link href="/Analyse" passHref>
+      <Link href="/Analyze" passHref>
         <button>診断ページへ</button>
       </Link>
     </>

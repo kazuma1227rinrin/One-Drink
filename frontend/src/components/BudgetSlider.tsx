@@ -2,7 +2,7 @@ import React from 'react';
 import {styled} from "styled-components";
 import { Box, Slider, SliderTrack, SliderFilledTrack, SliderThumb } from '@chakra-ui/react';
 
-export const PriceSlider = () => {
+export const BudgetSlider = () => {
     const [value, setValue] = React.useState(1000);
 
     return (
