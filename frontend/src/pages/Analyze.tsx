@@ -20,7 +20,7 @@ export default function Analyze() {
     const [drinkSize, setDrinkSize] = useState(null);
 
     const handleAnalysis = async () => {
-        const response = await fetch("/api/analysis", {
+        const response = await fetch("http://localhost:3000/analysis", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
