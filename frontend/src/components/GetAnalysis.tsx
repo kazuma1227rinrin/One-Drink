@@ -1,12 +1,22 @@
 import {Button} from "@chakra-ui/react";
 import {styled} from "styled-components";
 import Link from 'next/link';
+import axios from 'axios';
 
 interface GetAnalysisProps {
     handleAnalysis: () => void;
   }
 
-export const GetAnalysis=({ handleAnalysis }: GetAnalysisProps)=>{
+export const GetAnalysis=({ budget, hasNotCaffeine, feeling, commitment, drinkSize })=>{
+
+    const handleAnalysis = async () => {
+        try {
+          const response = await axios.post('http://localhost:3000/analysis', { budget, hasNotCaffeine, feeling, commitment, drinkSize });
+          console.log(response.data); // バックエンドからのレスポンスをコンソールに表示
+        } catch (error) {
+          console.error('Error posting budget to backend', error);
+        }
+      };
 
     return(
         <Sdiv>

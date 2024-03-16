@@ -3,13 +3,17 @@ import { Center, Stack, Switch } from "@chakra-ui/react";
 import React, {useState} from "react";
 
 
-export const Caffeine = () => {
+export const Caffeine = ({ onChange }) => {
+
     // true: カフェインなし, false: カフェインあり
-    const [isNotContainedCaffeine, setIsNotContainedCaffeine]=useState(false);
-    // スイッチのON/OFFを判定する
+    const [hasNotContainedCaffeine, setHasNotContainedCaffeine]=useState(false);
+
     const handleSwitchChange = (event) => {
-        setIsNotContainedCaffeine(event.target.checked);
+        const isSwitchOn = event.target.checked;
+        setHasNotContainedCaffeine(isSwitchOn);
+        onChange(isSwitchOn);
     };
+
     return (
         <>
             <Sdiv>
@@ -22,7 +26,7 @@ export const Caffeine = () => {
                         colorScheme='green' 
                         size='md' 
                         onChange={handleSwitchChange}
-                        isChecked={isNotContainedCaffeine}
+                        isChecked={hasNotContainedCaffeine}
                     />
                     <p>絶対なし！</p>
                 </Stack>

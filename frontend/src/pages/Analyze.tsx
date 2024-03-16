@@ -9,49 +9,61 @@ import {DrinkSize} from "@/components/DrinkSize";
 import {GetAnalysis} from "@/components/GetAnalysis";
 import {Footer} from "@/components/Footer";
 import {ChakraProvider} from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 export default function Analyze() {
 
-    const [budget, setBudget] = useState(1000);
-    const [hasCaffeine, setHasCaffeine] = useState(false);
+    const [budget, setBudget] = useState<number>(1000);
+    const [hasNotCaffeine, setHasNotCaffeine] = useState(false);
     const [feeling, setFeeling] = useState(null);
     const [commitment, setCommitment] = useState(null);
     const [drinkSize, setDrinkSize] = useState(null);
 
-    const handleAnalysis = async () => {
-        const response = await fetch("http://localhost:3000/analysis", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            budget,
-            hasCaffeine,
-            feeling,
-            commitment,
-            drinkSize,
-        }),
-        });
+    // 予算スライダーが更新されたとき、新しい予算の値をセットする。
+    const handleBudgetChange = useCallback((newBudget: number) => {
+        setBudget(newBudget);
+      }, []);
 
-        const data = await response.json();
-        // データを Result コンポーネントに渡す
-    };
+    // 気分のボタンが押下されたとき、気分の値をセットする。
+      const handleFeelingChange = useCallback((newFeeling: string) => {
+        setFeeling(newFeeling); 
+    }, []);
+
+    // こだわりのボタンが押下されたとき、こだわりの値をセットする。
+    const handleCommitmentChange = useCallback((newCommitment: string) => {
+        setCommitment(newCommitment); 
+    }, []);
+
+    // ドリンクサイズのボタンが押下されたとき、ドリンクサイズの値をセットする。
+    const handleDrinkSizeChange = useCallback((newDrinkSize: string) => {
+        setDrinkSize(newDrinkSize); 
+    }, []);
+
+    // カフェインオフスイッチがONになったとき、カフェインオフスイッチの値をセットする。
+    const handleHasNotCaffeineChange = useCallback((newHasNotCaffeine: boolean) => {
+        setHasNotCaffeine(newHasNotCaffeine); 
+    }, []);
     
     return (
         <>
-        <div style={{ paddingBottom: '50px' }}>
+        <div style={{ paddingBottom: '1px' }}>
             <Header/>
         </div>
         <ChakraProvider>
             <TopButtonArea/>
             <Title/>
-            <BudgetSlider budget={budget} setBudget={setBudget}/>
-            <Caffeine hasCaffeine={hasCaffeine} setHasCaffeine={setHasCaffeine}/>
-            <Feeling feeling={feeling} setFeeling={setFeeling}/>
-            <Commitment commitment={commitment} setCommitment={setCommitment}/>
-            <DrinkSize drinkSize={drinkSize} setDrinkSize={setDrinkSize}/>
-            <GetAnalysis handleAnalysis={handleAnalysis}/>
+            <BudgetSlider onChange={handleBudgetChange}/>
+            <Caffeine onChange={handleHasNotCaffeineChange}/>
+            <Feeling onChange={handleFeelingChange}/>
+            <Commitment onChange={handleCommitmentChange}/>
+            <DrinkSize onChange={handleDrinkSizeChange}/>
+            <GetAnalysis 
+                budget={budget}
+                hasNotCaffeine={hasNotCaffeine}
+                feeling={feeling} 
+                commitment={commitment} 
+                drinkSize={drinkSize} 
+            />
         </ChakraProvider>
         <div>
             <Footer/>        

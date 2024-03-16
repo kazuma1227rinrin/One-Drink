@@ -2,8 +2,18 @@ import React from 'react';
 import {styled} from "styled-components";
 import { Box, Slider, SliderTrack, SliderFilledTrack, SliderThumb } from '@chakra-ui/react';
 
-export const BudgetSlider = () => {
+// Propsの型定義を追加
+interface BudgetSliderProps {
+    onChange: (value: number) => void;
+  }
+
+export const BudgetSlider = ({ onChange }: BudgetSliderProps) => {
     const [value, setValue] = React.useState(1000);
+
+    const handleChange = (val) => {
+        setValue(val);
+        onChange(val); // 外部から渡されたonChangeを呼び出す
+    };
 
     return (
       <>
@@ -16,7 +26,8 @@ export const BudgetSlider = () => {
                 min={400}
                 max={2000}
                 step={100}
-                onChange={(val) => setValue(val)}
+                // onChange={(val) => setValue(val)}
+                onChange={handleChange}
             >
                 <SliderTrack>
                     <SliderFilledTrack />

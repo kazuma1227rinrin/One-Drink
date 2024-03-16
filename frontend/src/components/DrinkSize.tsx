@@ -8,12 +8,13 @@ const Sdiv = styled.div`
     margin-top: 40px; 
 `
 
-export const DrinkSize=()=>{
+export const DrinkSize=({ onChange })=>{
 
     const [activeButton, setActiveButton] = useState(null);
 
     const handleButtonClick = (button) => {
-        setActiveButton(button); // 押されたボタンをアクティブにする
+        setActiveButton(button);
+        onChange(button); // 親コンポーネントのonChangeを呼び出す
     };
 
     return(
@@ -22,16 +23,32 @@ export const DrinkSize=()=>{
             <p>大きさは？</p>
         </Sdiv>
         <SButtonGroup>
-        <Button colorScheme='green' variant={activeButton === 'short' ? 'solid' : 'outline'} onClick={() => handleButtonClick('short')}>
+            <Button 
+                colorScheme='green' 
+                variant={activeButton === 'short' ? 'solid' : 'outline'} 
+                onClick={() => handleButtonClick('short')}
+            >
                 Short
             </Button>
-            <Button colorScheme='green' variant={activeButton === 'tall' ? 'solid' : 'outline'} onClick={() => handleButtonClick('tall')}>
+            <Button 
+                colorScheme='green' 
+                variant={activeButton === 'tall' ? 'solid' : 'outline'} 
+                onClick={() => handleButtonClick('tall')}
+            >
                 Tall
             </Button>
-            <Button colorScheme='green' variant={activeButton === 'grande' ? 'solid' : 'outline'} onClick={() => handleButtonClick('grande')}>
+            <Button 
+                colorScheme='green' 
+                variant={activeButton === 'grande' ? 'solid' : 'outline'} 
+                onClick={() => handleButtonClick('grande')}
+            >
                 Grande
             </Button>
-            <Button colorScheme='green' variant={activeButton === 'venti' ? 'solid' : 'outline'} onClick={() => handleButtonClick('venti')}>
+            <Button 
+                colorScheme='green' 
+                variant={activeButton === 'venti' ? 'solid' : 'outline'} 
+                onClick={() => handleButtonClick('venti')}
+            >
                 Venti
             </Button>
         </SButtonGroup>

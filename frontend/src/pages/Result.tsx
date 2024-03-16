@@ -16,7 +16,7 @@ export default function Result() {
         <ChakraProvider>
             <TitleResult/>
 
-            <Link href="/Analyse">
+            <Link href="/Analyze">
                 <Button>再診断</Button>
             </Link>
         </ChakraProvider>
