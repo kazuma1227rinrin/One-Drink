@@ -12,7 +12,7 @@ export const GetAnalysis=({ budget, hasNotCaffeine, feeling, commitment, drinkSi
     const handleAnalysis = async () => {
         try {
           const response = await axios.post('http://localhost:3000/analysis', { budget, hasNotCaffeine, feeling, commitment, drinkSize });
-          console.log(response.data); // バックエンドからのレスポンスをコンソールに表示
+          console.log("これはなに", response.data); // バックエンドからのレスポンスをコンソールに表示
         } catch (error) {
           console.error('Error posting budget to backend', error);
         }

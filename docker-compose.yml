@@ -40,6 +40,9 @@ services:
 
   # バックエンド
   backend:
+
+    # byebugを使うための記述
+    stdin_open: true
     
     # trueにすると仮想のteletypewriterが割り当てられる。
     # ログをリアルタイムで確認したい時に便利

@@ -8,7 +8,7 @@ class AnalyzeController < ApplicationController
 
         # コンソールで値確認
         puts "Received parameters: #{params.inspect}"
-      
+        
         # フロントエンドから送信されたデータを受け取る
         budget = params[:budget].to_i
         has_not_caffeine = params[:hasNotCaffeine]
@@ -28,6 +28,12 @@ class AnalyzeController < ApplicationController
         # 取得したデータをRubyのハッシュに変換
         products = JSON.parse(response)
 
+        # API2から商品データを取得
+        url2 = URI('https://product.starbucks.co.jp/allergy/json/nutritions.json')
+        response2 = Net::HTTP.get(url2)
+        # 取得したデータをRubyのハッシュに変換
+        products2 = JSON.parse(response2)        
+
         # フィルタリング処理
         filtered_products = products.select do |product|
             # 価格が予算内であるかのチェック(当然0以上)
@@ -38,6 +44,7 @@ class AnalyzeController < ApplicationController
                 value_str.include?("カフェインレス") || value_str.include?("ディカフェ") || value_str.include?("ノンカフェイン")
             end)
         end
+        # binding.pry
 
         # 条件に合う商品のidを抽出
         eligible_product_ids = filtered_products.map { |product| product["id"] }
@@ -55,6 +62,8 @@ class AnalyzeController < ApplicationController
         # 選択した商品の名前と画像URLを取得
         selected_product_name = selected_product["product_name"]
         selected_product_image = selected_product["image1"]
+
+        # binding.pry
 
         # 選択した商品の名前、画像URLを含む情報をフロントエンドに返す
         render json: { product_name: selected_product_name, image_url: selected_product_image }

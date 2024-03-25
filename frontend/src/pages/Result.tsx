@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { ChakraProvider, Button, Image, Text } from "@chakra-ui/react";
+import { ChakraProvider, Button, Image, Text, Box } from "@chakra-ui/react";
 import Link from 'next/link';
 import { TitleResult } from "@/components/TitleResult";
 import axios from 'axios';
@@ -22,6 +22,9 @@ export default function Result() {
                         'Content-Type': 'application/json',
                     },
                 });
+
+                console.log("レスポンス: ", response.data);
+
                 // レスポンスから商品名と画像URLを取得してステートを更新
                 setProductName(response.data.product_name);
                 setImageUrl(response.data.image_url);
@@ -37,16 +40,24 @@ export default function Result() {
         <>
             <div style={{ paddingBottom: '50px' }}>
                 <Header/>
-                <div>
+                <Box display="flex" flexDirection="column" alignItems="center">
                     <ChakraProvider>
                         <TitleResult/>
-                        {imageUrl && <Image src={`https://product.starbucks.co.jp${imageUrl}`} alt="選択された商品の画像" />}
-                        {productName && <Text fontSize="2xl">{productName}</Text>}
+                        {imageUrl && (
+                            <Image
+                                src={`https://product.starbucks.co.jp${imageUrl}`}
+                                alt="選択された商品の画像"
+                                boxSize="300px"
+                                objectFit="cover"
+                                marginY={4} // 上下のマージンで少し間隔を開ける
+                            />
+                        )}
+                        {productName && <Text fontSize="2xl" marginTop="2">{productName}</Text>}
                         <Link href="/Analyze">
-                            <Button>再診断</Button>
+                            <Button marginTop="4">再診断</Button>
                         </Link>
                     </ChakraProvider>
-                </div>
+                </Box>
                 <Footer/>        
             </div>
         </>
