@@ -13,9 +13,13 @@ export default function Result() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.post('http://localhost:3000/analysis', {
+                const response = await axios.post('http://localhost:3000/drink', {
                     budget: 1000, // 例
                     hasNotCaffeine: true,
+                    // feeling: refresh,
+                    // commitment: lowCalorie,
+                    // drink_size: short,
+
                     // その他のパラメータ...
                 }, {
                     headers: {
