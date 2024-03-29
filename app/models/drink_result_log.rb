@@ -1,0 +1,2 @@
+class DrinkResultLog < ApplicationRecord
+end
