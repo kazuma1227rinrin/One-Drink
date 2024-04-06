@@ -1,69 +1,119 @@
-import React, { useState, useEffect } from 'react';
 import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
-import { ChakraProvider, Button, Image, Text, Box } from "@chakra-ui/react";
-import Link from 'next/link';
-import { TitleResult } from "@/components/TitleResult";
+import {TitleResult} from "@/components/TitleResult";
+import {Footer} from "@/components/Footer";
 import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { Box, Button, ChakraProvider, Image, Text, Flex } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
+import { Pie } from 'react-chartjs-2';
+import {
+    Chart as ChartJS,
+    ArcElement,
+    Tooltip,
+    Legend,
+    PieController
+  } from 'chart.js';
 
-export default function Result() {
-    const [productName, setProductName] = useState('');
-    const [imageUrl, setImageUrl] = useState('');
+  ChartJS.register(ArcElement, Tooltip, Legend, PieController);
+
+const Result = () => {
+    const [resultData, setResultData] = useState(null);
+
+    // 実際には動的にユーザーIDを取得するか、あるいは固定値を指定します。
+    // この例では固定値として 0 を使用しています。
+    const userId = 0;
 
     useEffect(() => {
-        const fetchData = async () => {
+        // バックエンドのAPIエンドポイント
+        const apiUrl = `http://localhost:3000/drink/${userId}`;
+
+        const fetchResultData = async () => {
             try {
-                const response = await axios.post('http://localhost:3000/drink', {
-                    budget: 1000, // 例
-                    hasNotCaffeine: true,
-                    // feeling: refresh,
-                    // commitment: lowCalorie,
-                    // drink_size: short,
-
-                    // その他のパラメータ...
-                }, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-
-                console.log("レスポンス: ", response.data);
-
-                // レスポンスから商品名と画像URLを取得してステートを更新
-                setProductName(response.data.product_name);
-                setImageUrl(response.data.image_url);
+                // axiosを使用してバックエンドからデータを取得
+                const response = await axios.get(apiUrl);
+                console.log("取得したデータ:", response.data); // デバッグ用
+                setResultData(response.data);
             } catch (error) {
-                console.error("Error fetching data: ", error);
+                console.error("データの取得に失敗しました。", error);
             }
         };
 
-        fetchData();
-    }, []);
+        fetchResultData();
+    }, []); // 空の依存配列を指定して、コンポーネントのマウント時にのみ実行  
+
+    if (!resultData) {
+        return <div>データをロード中...</div>;
+    }
+
+    // Chart.jsのデータ
+    const chartData = {
+        labels: ['タンパク質', '糖質', 'その他の水分'],
+        datasets: [{
+            data: [resultData.protein, resultData.sugar, 350],
+            backgroundColor: [
+                '#FF6384',
+                '#36A2EB',
+                '#FFCE56'
+            ],
+            hoverBackgroundColor: [
+                '#FF6384',
+                '#36A2EB',
+                '#FFCE56'
+            ]
+        }]
+    };    
 
     return (
         <>
-            <div style={{ paddingBottom: '50px' }}>
-                <Header/>
-                <Box display="flex" flexDirection="column" alignItems="center">
-                    <ChakraProvider>
-                        <TitleResult/>
-                        {imageUrl && (
-                            <Image
-                                src={`https://product.starbucks.co.jp${imageUrl}`}
-                                alt="選択された商品の画像"
-                                boxSize="300px"
-                                objectFit="cover"
-                                marginY={4} // 上下のマージンで少し間隔を開ける
-                            />
-                        )}
-                        {productName && <Text fontSize="2xl" marginTop="2">{productName}</Text>}
-                        <Link href="/Analyze">
-                            <Button marginTop="4">再診断</Button>
-                        </Link>
-                    </ChakraProvider>
+        <div style={{ paddingBottom: '1px' }}>
+            <Header/>
+        </div>
+        <div>
+            <ChakraProvider>
+                <TitleResult />
+                {resultData.image && (
+                <Box display="flex" justifyContent="center" mt="4">
+                    <Image src={`https://product.starbucks.co.jp${resultData.image}`} alt="Drink Image" boxSize="300px" objectFit="cover" />
                 </Box>
-                <Footer/>        
-            </div>
+                )}
+                <Box textAlign="center" mt="4">
+                    <Text fontSize="2xl">{resultData.drink_name} ({resultData.size})</Text>
+                </Box>                      
+                <Box mt="4" display="flex" justifyContent="center">
+                    <Box textAlign="left" style={{ maxWidth: '90%', width: '400px' }}>
+                        {resultData.customs && resultData.customs.map((custom, index) => (
+                        <Text key={index}>・{custom.name}</Text>
+                        ))}
+                    </Box>
+                </Box>
+                <Box mt="4" display="flex" flexDirection="column" alignItems="center">
+                    <Box maxWidth="400px" textAlign="center" padding="20px" boxShadow="lg" borderRadius="md">
+                        <Text><strong>説明:</strong> {resultData.description}</Text>
+                    </Box>
+                </Box>
+                <Box textAlign="center" mt="4">
+                    <Text fontSize="xl">総カロリー: {resultData.calorie}kcal</Text>
+                </Box>   
+                <Box display="flex" justifyContent="center" mt="4">
+                    <Flex alignItems="center" justifyContent="center" mt="4" gap="2">
+                        <Link href="/Analyze" passHref>
+                            <Button as="a" colorScheme="blue">再診断</Button>
+                        </Link>
+                        <Button colorScheme="green">カスタムを編集</Button>
+                        <Button colorScheme="teal">これを飲む！</Button>
+                    </Flex>
+                </Box>   
+                <Box textAlign="center" mt="4">
+                    <Pie data={chartData} /> 
+                </Box>                               
+            </ChakraProvider>
+        </div>
+        <div>
+            <Footer/>        
+        </div>        
         </>
     );
-}
+};
+
+export default Result;
