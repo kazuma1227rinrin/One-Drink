@@ -13,7 +13,7 @@ class DrinkController < ApplicationController
         has_not_caffeine = params[:hasNotCaffeine]
         feeling = params[:feeling]
         commitment = params[:commitment]
-        drink_size = params[:drinkSize]&.upcase
+        drink_size = params[:drinkSize]&.upcase       
 
         # API(カテゴリ)から商品データを取得
         url = URI('https://product.starbucks.co.jp/api/category-product-list/beverage/index.json')
@@ -27,11 +27,12 @@ class DrinkController < ApplicationController
         # 取得したデータをRubyのハッシュに変換
         products2 = JSON.parse(response2)        
 
+        # --------------------予算、カフェイン、サイズでの絞り込み--------------------
         # フィルタリング処理
         filtered_products = products.select do |product|
             # 価格が予算内かつ0以上、かつ指定されたcup_sizeに合致するかのチェック
             product["price"] <= budget && product["price"] > 0 &&
-            # product["cup_size"] == selected_cup_size &&
+            # product["cup_size"] == drink_size_num &&
             # has_not_caffeineがtrueの場合、商品の全テキストデータに「カフェインレス」が含まれているかをチェック
             (!has_not_caffeine || product.values.any? do |value|
                 value_str = value.to_s
@@ -51,6 +52,7 @@ class DrinkController < ApplicationController
         matched_products = []
 
         # APIデータをイテレートし、条件に一致するデータを探す
+        # IDから栄養APIのデータを取得する
         products2["STARBUCKS"]["beverage"].each do |_kbn, data|
             data["categories"].each do |_category_code, category_data|
                 category_data["menu_groups"].each do |group|
@@ -62,6 +64,8 @@ class DrinkController < ApplicationController
             end
         end
 
+        # ここまで値は正確に取れている
+
         # 条件に合う商品をフィルタリング
         real_drink = matched_products.select do |product|
             # feelingに基づくフィルタリング
@@ -70,9 +74,9 @@ class DrinkController < ApplicationController
             !product["product_name_ja"].include?("ホット")
             when 'focus'
             if has_not_caffeine
-                product["nutrition_by_milk"].any? { |nut| nut["sugar"] <= 40.0 }
+                product["nutrition_by_milk"].values.flatten.any? { |nut| nut["sugar"].to_f <= 40.0 }
             else
-                product["nutrition_by_milk"].any? { |nut| nut["caffeine"] >= 150.0 }
+                product["nutrition_by_milk"].values.flatten.any? { |nut| nut["caffeine"].to_f >= 150.0 }
             end
             when 'relax'
             product["product_name_ja"].include?("ホット")
@@ -82,9 +86,9 @@ class DrinkController < ApplicationController
             # commitmentに基づくフィルタリング
             case commitment
             when 'lowCalorie'
-                product["nutrition_by_milk"].any? { |nut| nut["calory"] <= 50.0 }
+                product["nutrition_by_milk"].values.flatten.any? { |nut| nut["calory"].to_f <= 50.0 }
             when 'protein'
-                product["nutrition_by_milk"].any? { |nut| nut["protein"] >= 10.0 }
+                product["nutrition_by_milk"].values.flatten.any? { |nut| nut["protein"].to_f >= 10.0 }
             else
                 true
             end
@@ -93,7 +97,9 @@ class DrinkController < ApplicationController
         # 条件に合う商品がない場合の処理
         if real_drink.empty?
             render json: { error: '真の商品は見つかりませんでした。' } and return
-        end        
+        end  
+        
+        # binding.pry
 
         # 最後の一品が入った配列
         final_choice = real_drink.sample
@@ -143,9 +149,41 @@ class DrinkController < ApplicationController
             puts "Failed to save DrinkResultLog: #{drink_result_log.errors.full_messages.join(", ")}"
         end        
         # --------------------
-        # binding.pry
-
+        
         # 取れた値をフロントエンドに返す
-        render json: { 商品名: product_name, 画像: image_url }
+        render json: { 栄養APIのデータ: real_drink}
+    end
+    # *******************************************************************
+    def show
+        # パラメータからuser_idを取得
+        user_id = params[:user_id]
+
+        # user_idに一致し、最新のレコードを取得
+        drink_log = DrinkResultLog.where(user_id: user_id).order(created_at: :desc).first        
+
+        # customsテーブルからランダムに3つのレコードを取得
+        random_customs = Custom.order('RAND()').limit(3)
+        
+        # random_customsのカロリーの合計を計算
+        total_customs_calorie = random_customs.sum(:calorie)
+        
+        # ドリンクのカロリーとカスタムのカロリーを合計
+        total_calorie = drink_log.calorie + total_customs_calorie if drink_log        
+
+        # 取得したレコードが存在する場合は、そのデータをJSON形式で返す
+        if drink_log
+            render json: {
+            image: drink_log.image,
+            drink_name: drink_log.drink_name,
+            size: drink_log.size,
+            description: drink_log.description,
+            calorie: total_calorie,
+            protein: drink_log.protein,
+            sugar: drink_log.sugar,
+            customs: random_customs.as_json(only: [:name, :calorie])
+            }
+        else
+            render json: { error: "Data not found" }, status: :not_found
+        end        
     end
   end
