@@ -66,33 +66,71 @@ class DrinkController < ApplicationController
 
         # ここまで値は正確に取れている
 
+        # # 条件に合う商品をフィルタリング
+        # real_drink = matched_products.select do |product|
+        #     # feelingに基づくフィルタリング
+        #     case feeling
+        #     when 'refresh'
+        #     !product["product_name_ja"].include?("ホット")
+        #     when 'focus'
+        #     if has_not_caffeine
+        #         product["nutrition_by_milk"].values.flatten.any? { |nut| nut["sugar"].to_f <= 40.0 }
+        #     else
+        #         product["nutrition_by_milk"].values.flatten.any? { |nut| nut["caffeine"].to_f >= 150.0 }
+        #     end
+        #     when 'relax'
+        #     product["product_name_ja"].include?("ホット")
+        #     else
+        #     true
+        #     end &&
+        #     # commitmentに基づくフィルタリング
+        #     case commitment
+        #     when 'lowCalorie'
+        #         product["nutrition_by_milk"].values.flatten.any? { |nut| nut["calory"].to_f <= 50.0 }
+        #     when 'protein'
+        #         product["nutrition_by_milk"].values.flatten.any? { |nut| nut["protein"].to_f >= 10.0 }
+        #     else
+        #         true
+        #     end
+        # end
+
         # 条件に合う商品をフィルタリング
         real_drink = matched_products.select do |product|
+            # 条件に合致する_nutrition_by_milkの要素をフィルタリング
+            valid_nutrition_items = product["nutrition_by_milk"][drink_size]&.select do |item|
+            item["_milk_type"].nil? || item["_milk_type"] == "milk"
+            end || []
+        
             # feelingに基づくフィルタリング
-            case feeling
-            when 'refresh'
-            !product["product_name_ja"].include?("ホット")
-            when 'focus'
-            if has_not_caffeine
-                product["nutrition_by_milk"].values.flatten.any? { |nut| nut["sugar"].to_f <= 40.0 }
-            else
-                product["nutrition_by_milk"].values.flatten.any? { |nut| nut["caffeine"].to_f >= 150.0 }
-            end
-            when 'relax'
-            product["product_name_ja"].include?("ホット")
-            else
-            true
-            end &&
+            feeling_condition = case feeling
+                                when 'refresh'
+                                !product["product_name_ja"].include?("ホット")
+                                when 'focus'
+                                if has_not_caffeine
+                                    valid_nutrition_items.any? { |nut| nut["sugar"].to_f <= 40.0 }
+                                else
+                                    valid_nutrition_items.any? { |nut| nut["caffeine"].to_f >= 150.0 }
+                                end
+                                # when 'relax'
+                                #   product["product_name_ja"].include?("ホット")
+                                else
+                                true
+                                end
+        
             # commitmentに基づくフィルタリング
-            case commitment
-            when 'lowCalorie'
-                product["nutrition_by_milk"].values.flatten.any? { |nut| nut["calory"].to_f <= 50.0 }
-            when 'protein'
-                product["nutrition_by_milk"].values.flatten.any? { |nut| nut["protein"].to_f >= 10.0 }
-            else
-                true
-            end
+            commitment_condition = case commitment
+                                when 'lowCalorie'
+                                    valid_nutrition_items.any? { |nut| nut["calory"].to_f <= 50.0 }
+                                when 'protein'
+                                    valid_nutrition_items.any? { |nut| nut["protein"].to_f >= 10.0 }
+                                else
+                                    true
+                                end
+        
+            # feelingとcommitmentの両条件を満たす場合にtrue
+            feeling_condition && commitment_condition
         end
+  
 
         # 条件に合う商品がない場合の処理
         if real_drink.empty?
@@ -148,27 +186,18 @@ class DrinkController < ApplicationController
         else
             puts "Failed to save DrinkResultLog: #{drink_result_log.errors.full_messages.join(", ")}"
         end        
-        # --------------------
         
         # 取れた値をフロントエンドに返す
         render json: { 栄養APIのデータ: real_drink}
     end
     # *******************************************************************
+    
     def show
         # パラメータからuser_idを取得
         user_id = params[:user_id]
-
+    
         # user_idに一致し、最新のレコードを取得
-        drink_log = DrinkResultLog.where(user_id: user_id).order(created_at: :desc).first        
-
-        # customsテーブルからランダムに3つのレコードを取得
-        random_customs = Custom.order('RAND()').limit(3)
-        
-        # random_customsのカロリーの合計を計算
-        total_customs_calorie = random_customs.sum(:calorie)
-        
-        # ドリンクのカロリーとカスタムのカロリーを合計
-        total_calorie = drink_log.calorie + total_customs_calorie if drink_log        
+        drink_log = DrinkResultLog.where(user_id: user_id).order(created_at: :desc).first  
 
         # 取得したレコードが存在する場合は、そのデータをJSON形式で返す
         if drink_log
@@ -177,13 +206,13 @@ class DrinkController < ApplicationController
             drink_name: drink_log.drink_name,
             size: drink_log.size,
             description: drink_log.description,
-            calorie: total_calorie,
+            calorie: drink_log.calorie,
             protein: drink_log.protein,
-            sugar: drink_log.sugar,
-            customs: random_customs.as_json(only: [:name, :calorie])
+            sugar: drink_log.sugar
             }
         else
             render json: { error: "Data not found" }, status: :not_found
-        end        
+        end
     end
+
   end

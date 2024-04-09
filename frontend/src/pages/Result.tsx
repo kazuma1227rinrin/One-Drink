@@ -4,7 +4,6 @@ import {Footer} from "@/components/Footer";
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Box, Button, ChakraProvider, Image, Text, Flex } from '@chakra-ui/react';
-import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { Pie } from 'react-chartjs-2';
 import {
@@ -16,6 +15,11 @@ import {
   } from 'chart.js';
 
   ChartJS.register(ArcElement, Tooltip, Legend, PieController);
+
+    // HTMLタグを除去する関数
+    const removeHtmlTags = (text) => {
+        return text.replace(/<[^>]*>/g, '');
+    };  
 
 const Result = () => {
     const [resultData, setResultData] = useState(null);
@@ -32,7 +36,6 @@ const Result = () => {
             try {
                 // axiosを使用してバックエンドからデータを取得
                 const response = await axios.get(apiUrl);
-                console.log("取得したデータ:", response.data); // デバッグ用
                 setResultData(response.data);
             } catch (error) {
                 console.error("データの取得に失敗しました。", error);
@@ -45,6 +48,9 @@ const Result = () => {
     if (!resultData) {
         return <div>データをロード中...</div>;
     }
+
+    // 説明文からHTMLタグを除去
+    const descriptionWithoutHtml = removeHtmlTags(resultData.description);    
 
     // Chart.jsのデータ
     const chartData = {
@@ -80,20 +86,13 @@ const Result = () => {
                 <Box textAlign="center" mt="4">
                     <Text fontSize="2xl">{resultData.drink_name} ({resultData.size})</Text>
                 </Box>                      
-                <Box mt="4" display="flex" justifyContent="center">
-                    <Box textAlign="left" style={{ maxWidth: '90%', width: '400px' }}>
-                        {resultData.customs && resultData.customs.map((custom, index) => (
-                        <Text key={index}>・{custom.name}</Text>
-                        ))}
-                    </Box>
-                </Box>
                 <Box mt="4" display="flex" flexDirection="column" alignItems="center">
                     <Box maxWidth="400px" textAlign="center" padding="20px" boxShadow="lg" borderRadius="md">
-                        <Text><strong>説明:</strong> {resultData.description}</Text>
+                        <Text><strong>説明:</strong> {descriptionWithoutHtml}</Text>
                     </Box>
                 </Box>
                 <Box textAlign="center" mt="4">
-                    <Text fontSize="xl">総カロリー: {resultData.calorie}kcal</Text>
+                    <Text fontSize="xl">カロリー: {resultData.calorie}kcal</Text>
                 </Box>   
                 <Box display="flex" justifyContent="center" mt="4">
                     <Flex alignItems="center" justifyContent="center" mt="4" gap="2">
