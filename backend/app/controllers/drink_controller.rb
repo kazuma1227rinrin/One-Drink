@@ -27,7 +27,7 @@ class DrinkController < ApplicationController
         # 取得したデータをRubyのハッシュに変換
         products2 = JSON.parse(response2)        
 
-        # --------------------予算、カフェイン、サイズでの絞り込み--------------------
+        # --------------------予算、カフェインでの絞り込み--------------------
         # フィルタリング処理
         filtered_products = products.select do |product|
             # 価格が予算内かつ0以上、かつ指定されたcup_sizeに合致するかのチェック
@@ -135,9 +135,7 @@ class DrinkController < ApplicationController
         # 条件に合う商品がない場合の処理
         if real_drink.empty?
             render json: { error: '真の商品は見つかりませんでした。' } and return
-        end  
-        
-        # binding.pry
+        end
 
         # 最後の一品が入った配列
         final_choice = real_drink.sample
@@ -215,4 +213,28 @@ class DrinkController < ApplicationController
         end
     end
 
-  end
+    # *******************************************************************
+
+    def showCustom
+        # パラメータからuser_idを取得
+        user_id = params[:user_id]
+
+        # user_idに一致し、最新のレコードを取得
+        drink_log = DrinkResultLog.where(user_id: user_id).order(created_at: :desc).first  
+
+        # Customsテーブルからすべてのレコードを取得
+        customs = Custom.all        
+
+        # 取得したレコードが存在する場合は、そのデータをJSON形式で返す
+        if drink_log
+            render json: {
+            image: drink_log.image,
+            drink_name: drink_log.drink_name,
+            size: drink_log.size, 
+            customs: customs
+            }
+        else
+            render json: { error: "Data not found" }, status: :not_found
+        end        
+    end
+end

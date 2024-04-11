@@ -13,16 +13,22 @@ import {
     Legend,
     PieController
   } from 'chart.js';
+import { useRouter } from 'next/router';  
 
   ChartJS.register(ArcElement, Tooltip, Legend, PieController);
 
     // HTMLタグを除去する関数
     const removeHtmlTags = (text) => {
+    // textがnullまたはundefinedの場合、空文字列を返す
+    if (text === null || text === undefined) {
+        return '';
+    }        
         return text.replace(/<[^>]*>/g, '');
     };  
 
 const Result = () => {
     const [resultData, setResultData] = useState(null);
+    const router = useRouter();
 
     // 実際には動的にユーザーIDを取得するか、あるいは固定値を指定します。
     // この例では固定値として 0 を使用しています。
@@ -44,6 +50,10 @@ const Result = () => {
 
         fetchResultData();
     }, []); // 空の依存配列を指定して、コンポーネントのマウント時にのみ実行  
+
+    const handleEditCustom = () => {
+        router.push('/Custom'); // 'カスタムを編集' ボタンがクリックされた時にCustom画面へ遷移
+    };    
 
     if (!resultData) {
         return <div>データをロード中...</div>;
@@ -99,7 +109,7 @@ const Result = () => {
                         <Link href="/Analyze" passHref>
                             <Button as="a" colorScheme="blue">再診断</Button>
                         </Link>
-                        <Button colorScheme="green">カスタムを編集</Button>
+                        <Button colorScheme="green" onClick={handleEditCustom}>カスタムを編集</Button>
                         <Button colorScheme="teal">これを飲む！</Button>
                     </Flex>
                 </Box>   
