@@ -237,4 +237,23 @@ class DrinkController < ApplicationController
             render json: { error: "Data not found" }, status: :not_found
         end        
     end
+
+    # *******************************************************************
+
+    def update_drink_result
+        user_id = params[:user_id] # ユーザーIDをパラメータから取得
+        custom_ids = params[:custom_ids] # カスタムIDの配列をパラメータから取得
+    
+        # 最新のdrink_result_logsのレコードを取得してis_drank_flgを更新
+        latest_drink_result = DrinkResultLog.where(user_id: user_id).order(id: :desc).first
+        if latest_drink_result.update(is_drank_flg: 1)
+          # カスタムIDごとにcustom_drank_logsにレコードを作成
+          custom_ids.each do |custom_id|
+            CustomDrankLog.create(drink_result_log_id: latest_drink_result.id, custom_id: custom_id)
+          end
+          render json: { status: 'success' }
+        else
+          render json: { status: 'error', message: 'Update failed' }
+        end
+    end    
 end

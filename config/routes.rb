@@ -9,4 +9,7 @@ Rails.application.routes.draw do
   # drinkコントローラのshowアクションへのルーティング
   # 例: GET /custom/1
   get 'custom/:user_id', to: 'drink#showCustom'  
+
+  # DrinksControllerに対する新しいルートを追加
+  post 'drinks/update_drink_result', to: 'drink#update_drink_result'
 end
