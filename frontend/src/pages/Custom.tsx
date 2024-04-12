@@ -62,7 +62,7 @@ const Custom = () => {
                 {customOptions.length > 0 && (
                     <Box mt="4" maxWidth="sm" width="100%" marginX="auto">
                         {Array.from({ length: 3 }).map((_, index) => (
-                            <Select key={index} placeholder="カスタムを選択" colorScheme="green" mt={index ? 2 : 0}>
+                            <Select key={index} placeholder="-" colorScheme="green" mt={index ? 2 : 0}>
                                 {customOptions.map(option => (
                                     <option key={option.id} value={option.id}>{option.name}</option> // option_nameをnameに変更
                                 ))}
@@ -72,7 +72,7 @@ const Custom = () => {
                 )}
                 <Flex mt="4" justifyContent="center" gap="4">
                     <Button colorScheme="teal" onClick={() => router.back()}>結果画面に戻る</Button>
-                    <Button colorScheme="teal" onClick={() => console.log("決定！")}>これで決まり！</Button>
+                    <Button colorScheme="teal" onClick={() => router.push('/History')}>これで決まり！</Button>                    
                 </Flex>                                           
             </ChakraProvider>
         </div>        
