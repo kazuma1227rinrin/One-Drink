@@ -37,7 +37,28 @@ const Custom = () => {
         };
 
         fetchResultData();
-    }, []); // 空の依存配列を指定して、コンポーネントのマウント時にのみ実行
+    }, []); 
+
+    const finalizeCustoms = async () => {
+        const selectedCustoms = document.querySelectorAll("select");
+        const customIds = Array.from(selectedCustoms).map(select => select.value);
+
+        try {
+            const response = await axios.post('http://localhost:3000/drinks/update_drink_result', {
+                user_id: userId,
+                custom_ids: customIds.filter(id => id !== '-') // '-' でないものだけ送信
+            });
+
+            if (response.data.status === 'success') {
+                alert('カスタマイズが保存されました！');
+                router.push('/History');
+            } else {
+                throw new Error('保存に失敗しました。');
+            }
+        } catch (error) {
+            console.error("APIからの応答に問題がありました。", error);
+        }
+    };    
 
     if (!resultData) {
         return <div>データをロード中...</div>;
@@ -64,7 +85,7 @@ const Custom = () => {
                         {Array.from({ length: 3 }).map((_, index) => (
                             <Select key={index} placeholder="-" colorScheme="green" mt={index ? 2 : 0}>
                                 {customOptions.map(option => (
-                                    <option key={option.id} value={option.id}>{option.name}</option> // option_nameをnameに変更
+                                    <option key={option.id} value={option.id}>{option.name}</option> 
                                 ))}
                             </Select>
                         ))}
@@ -72,7 +93,7 @@ const Custom = () => {
                 )}
                 <Flex mt="4" justifyContent="center" gap="4">
                     <Button colorScheme="teal" onClick={() => router.back()}>結果画面に戻る</Button>
-                    <Button colorScheme="teal" onClick={() => router.push('/History')}>これで決まり！</Button>                    
+                    <Button colorScheme="teal" onClick={finalizeCustoms}>これで決まり！</Button>                    
                 </Flex>                                           
             </ChakraProvider>
         </div>        

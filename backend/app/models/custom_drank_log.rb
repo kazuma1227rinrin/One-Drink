@@ -1,0 +1,2 @@
+class CustomDrankLog < ApplicationRecord
+end
