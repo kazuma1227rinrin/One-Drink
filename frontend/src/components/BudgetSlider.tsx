@@ -10,7 +10,7 @@ interface BudgetSliderProps {
 export const BudgetSlider = ({ onChange }: BudgetSliderProps) => {
     const [value, setValue] = React.useState(1000);
 
-    const handleChange = (val) => {
+    const handleChange = (val: number) => {
         setValue(val);
         onChange(val); // 外部から渡されたonChangeを呼び出す
     };

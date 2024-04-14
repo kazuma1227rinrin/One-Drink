@@ -4,17 +4,21 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 
 interface GetAnalysisProps {
-    handleAnalysis: () => void;
+    budget: number;
+    hasNotCaffeine: boolean;
+    feeling: string;
+    commitment: string;
+    drinkSize: string;
 }
 
-export const GetAnalysis=({ budget, hasNotCaffeine, feeling, commitment, drinkSize })=>{
+export const GetAnalysis=({ budget, hasNotCaffeine, feeling, commitment, drinkSize }: GetAnalysisProps)=>{
 
     const router = useRouter();
 
     const handleAnalysis = async () => {
 
-        // drinkSizeがnullまたはundefinedであれば、"tall"を設定
-        const effectiveDrinkSize = drinkSize == null ? "tall" : drinkSize;   
+        // drinkSizeがnullまたはundefinedであれば、"tall"を設定        
+        const effectiveDrinkSize = drinkSize || "tall";  
         
         try {
           const response = await axios.post('http://localhost:3000/drink', { 
@@ -24,7 +28,7 @@ export const GetAnalysis=({ budget, hasNotCaffeine, feeling, commitment, drinkSi
             commitment, 
             drinkSize: effectiveDrinkSize
           });
-          router.push('/Result'); // ここを変更
+          router.push('/Result'); 
         } catch (error) {
           console.error('Error posting budget to backend', error);
         }
@@ -32,7 +36,7 @@ export const GetAnalysis=({ budget, hasNotCaffeine, feeling, commitment, drinkSi
 
     return(
         <Sdiv>
-            <Button onClick={handleAnalysis} colorScheme='orange'>診断結果を見る！</Button> {/* Linkタグを削除 */}
+            <Button onClick={handleAnalysis} colorScheme='orange'>診断結果を見る！</Button>
         </Sdiv>
     )
 }

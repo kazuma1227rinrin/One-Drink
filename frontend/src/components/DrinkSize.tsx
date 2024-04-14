@@ -8,11 +8,15 @@ const Sdiv = styled.div`
     margin-top: 40px; 
 `
 
-export const DrinkSize=({ onChange })=>{
+interface DrinkSizeProps {
+    onChange: (value: string) => void; // 適切な型を設定
+}
 
-    const [activeButton, setActiveButton] = useState(null);
+export const DrinkSize=({ onChange }: DrinkSizeProps)=>{
 
-    const handleButtonClick = (button) => {
+    const [activeButton, setActiveButton] = useState<string | null>(null);
+
+    const handleButtonClick = (button: string) => {
         setActiveButton(button);
         onChange(button); // 親コンポーネントのonChangeを呼び出す
     };

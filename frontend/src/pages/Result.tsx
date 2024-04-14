@@ -1,6 +1,6 @@
 import { Header } from "@/components/Header";
-import {TitleResult} from "@/components/TitleResult";
-import {Footer} from "@/components/Footer";
+import { TitleResult } from "@/components/TitleResult";
+import { Footer } from "@/components/Footer";
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Box, Button, ChakraProvider, Image, Text, Flex } from '@chakra-ui/react';
@@ -12,36 +12,34 @@ import {
     Tooltip,
     Legend,
     PieController
-  } from 'chart.js';
-import { useRouter } from 'next/router';  
+} from 'chart.js';
+import { useRouter } from 'next/router';
+import React from 'react';
 
-  ChartJS.register(ArcElement, Tooltip, Legend, PieController);
+ChartJS.register(ArcElement, Tooltip, Legend, PieController);
 
-    // HTMLタグを除去する関数
-    const removeHtmlTags = (text) => {
-    // textがnullまたはundefinedの場合、空文字列を返す
-    if (text === null || text === undefined) {
-        return '';
-    }        
-        return text.replace(/<[^>]*>/g, '');
-    };  
+interface ResultData {
+    image: string;
+    description: string;
+    drink_name: string;
+    size: string;
+    calorie: number;
+    protein: number;
+    sugar: number;
+}
 
 const Result = () => {
-    const [resultData, setResultData] = useState(null);
+    const [resultData, setResultData] = useState<ResultData | null>(null);
     const router = useRouter();
 
-    // 実際には動的にユーザーIDを取得するか、あるいは固定値を指定します。
-    // この例では固定値として 0 を使用しています。
     const userId = 0;
 
     useEffect(() => {
-        // バックエンドのAPIエンドポイント
         const apiUrl = `http://localhost:3000/drink/${userId}`;
 
         const fetchResultData = async () => {
             try {
-                // axiosを使用してバックエンドからデータを取得
-                const response = await axios.get(apiUrl);
+                const response = await axios.get<ResultData>(apiUrl);
                 setResultData(response.data);
             } catch (error) {
                 console.error("データの取得に失敗しました。", error);
@@ -49,20 +47,14 @@ const Result = () => {
         };
 
         fetchResultData();
-    }, []); // 空の依存配列を指定して、コンポーネントのマウント時にのみ実行  
-
-    const handleEditCustom = () => {
-        router.push('/Custom'); // 'カスタムを編集' ボタンがクリックされた時にCustom画面へ遷移
-    };    
+    }, []);
 
     if (!resultData) {
-        return <div>データをロード中...</div>;
+        return <div>Loading...</div>;
     }
 
-    // 説明文からHTMLタグを除去
-    const descriptionWithoutHtml = removeHtmlTags(resultData.description);    
+    const descriptionWithoutHtml = removeHtmlTags(resultData.description);
 
-    // Chart.jsのデータ
     const chartData = {
         labels: ['タンパク質', '糖質', 'その他の水分'],
         datasets: [{
@@ -78,51 +70,37 @@ const Result = () => {
                 '#FFCE56'
             ]
         }]
-    };    
+    };
 
     return (
         <>
-        <div style={{ paddingBottom: '1px' }}>
-            <Header/>
-        </div>
-        <div>
+            <Header />
             <ChakraProvider>
                 <TitleResult />
                 {resultData.image && (
-                <Box display="flex" justifyContent="center" mt="4">
-                    <Image src={`https://product.starbucks.co.jp${resultData.image}`} alt="Drink Image" boxSize="300px" objectFit="cover" />
-                </Box>
-                )}
-                <Box textAlign="center" mt="4">
-                    <Text fontSize="2xl">{resultData.drink_name} ({resultData.size})</Text>
-                </Box>                      
-                <Box mt="4" display="flex" flexDirection="column" alignItems="center">
-                    <Box maxWidth="400px" textAlign="center" padding="20px" boxShadow="lg" borderRadius="md">
-                        <Text><strong>説明:</strong> {descriptionWithoutHtml}</Text>
+                    <Box display="flex" justifyContent="center" mt="4">
+                        <Image src={`https://product.starbucks.co.jp${resultData.image}`} alt="Drink Image" boxSize="300px" objectFit="cover" />
                     </Box>
+                )}
+                <Text fontSize="2xl" textAlign="center" mt="4">{resultData.drink_name} ({resultData.size})</Text>
+                <Box padding="20px" boxShadow="lg" borderRadius="md" maxWidth="400px" margin="auto" mt="4">
+                    <strong>説明:</strong> {descriptionWithoutHtml}
                 </Box>
-                <Box textAlign="center" mt="4">
-                    <Text fontSize="xl">カロリー: {resultData.calorie}kcal</Text>
-                </Box>   
-                <Box display="flex" justifyContent="center" mt="4">
-                    <Flex alignItems="center" justifyContent="center" mt="4" gap="2">
-                        <Link href="/Analyze" passHref>
-                            <Button as="a" colorScheme="blue">再診断</Button>
-                        </Link>
-                        <Button colorScheme="green" onClick={handleEditCustom}>カスタムを編集</Button>
-                        <Button colorScheme="teal">これを飲む！</Button>
-                    </Flex>
-                </Box>   
-                <Box textAlign="center" mt="4">
-                    <Pie data={chartData} /> 
-                </Box>                               
+                <Text fontSize="xl" textAlign="center" mt="4">カロリー: {resultData.calorie} kcal</Text>
+                <Flex justifyContent="center" mt="4">
+                    <Button colorScheme="blue" as="a" href="/Analyze">再診断</Button>
+                    <Button colorScheme="green" onClick={() => router.push('/Custom')}>カスタムを編集</Button>
+                    <Button colorScheme="teal">これを飲む！</Button>
+                </Flex>
+                <Pie data={chartData} />
             </ChakraProvider>
-        </div>
-        <div>
-            <Footer/>        
-        </div>        
+            <Footer />
         </>
     );
 };
 
 export default Result;
+
+function removeHtmlTags(text: string): string {
+    return text.replace(/<[^>]*>?/gm, '');
+}

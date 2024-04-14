@@ -2,11 +2,15 @@ import React, { useState } from 'react';
 import {styled} from "styled-components";
 import {Button} from "@chakra-ui/react";
 
-export const Feeling=({ onChange })=>{
-    
-    const [activeButton, setActiveButton] = useState(null);
+interface FeelingProps {
+    onChange: (value: string) => void; // または適切な型
+}
 
-    const handleButtonClick = (button) => {
+export const Feeling=({ onChange }: FeelingProps)=>{
+    
+    const [activeButton, setActiveButton] = useState<string | null>(null);
+
+    const handleButtonClick = (button: string) => {
         setActiveButton(button);
         onChange(button); // 親コンポーネントのonChangeを呼び出す
     };

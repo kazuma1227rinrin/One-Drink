@@ -2,13 +2,16 @@ import {styled} from "styled-components";
 import { Center, Stack, Switch } from "@chakra-ui/react";
 import React, {useState} from "react";
 
+interface CaffeineProps {
+    onChange: (value: boolean) => void;  // 適切な型を設定
+}
 
-export const Caffeine = ({ onChange }) => {
+export const Caffeine = ({ onChange }: CaffeineProps) => {
 
     // true: カフェインなし, false: カフェインあり
     const [hasNotContainedCaffeine, setHasNotContainedCaffeine]=useState(false);
 
-    const handleSwitchChange = (event) => {
+    const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const isSwitchOn = event.target.checked;
         setHasNotContainedCaffeine(isSwitchOn);
         onChange(isSwitchOn);

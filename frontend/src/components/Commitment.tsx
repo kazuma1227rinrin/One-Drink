@@ -2,11 +2,15 @@ import React, { useState } from 'react';
 import {Button} from "@chakra-ui/react";
 import {styled} from "styled-components";
 
-export const Commitment=({ onChange })=>{
+interface CommitmentProps {
+    onChange: (value: string) => void;
+}
 
-    const [activeButton, setActiveButton] = useState(null);
+export const Commitment=({ onChange }: CommitmentProps)=>{
+
+    const [activeButton, setActiveButton] = useState<string | null>(null);
     
-    const handleButtonClick = (button) => {
+    const handleButtonClick = (button: string) => {
         setActiveButton(button);
         onChange(button); // 親コンポーネントのonChangeを呼び出す
     };

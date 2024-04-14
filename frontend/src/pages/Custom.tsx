@@ -15,9 +15,23 @@ import {
     Button 
 } from '@chakra-ui/react';
 
+// ResultDataの型定義
+interface ResultData {
+    image: string;
+    drink_name: string;
+    size: string;
+    customs: CustomOption[];
+}
+
+// CustomOptionの型定義
+interface CustomOption {
+    id: number;
+    name: string;
+}
+
 const Custom = () => {
-    const [resultData, setResultData] = useState(null);
-    const [customOptions, setCustomOptions] = useState([]); 
+    const [resultData, setResultData] = useState<ResultData | null>(null);
+    const [customOptions, setCustomOptions] = useState<CustomOption[]>([]); 
     const router = useRouter();    
     const userId = 0;
     
@@ -28,7 +42,7 @@ const Custom = () => {
         const fetchResultData = async () => {
             try {
                 // axiosを使用してバックエンドからデータを取得
-                const response = await axios.get(apiUrl);
+                const response = await axios.get<ResultData>(apiUrl);
                 setResultData(response.data);
                 setCustomOptions(response.data.customs);
             } catch (error) {
@@ -40,7 +54,7 @@ const Custom = () => {
     }, []); 
 
     const finalizeCustoms = async () => {
-        const selectedCustoms = document.querySelectorAll("select");
+        const selectedCustoms = document.querySelectorAll<HTMLSelectElement>("select");
         const customIds = Array.from(selectedCustoms).map(select => select.value);
 
         try {
@@ -50,7 +64,6 @@ const Custom = () => {
             });
 
             if (response.data.status === 'success') {
-                alert('カスタマイズが保存されました！');
                 router.push('/History');
             } else {
                 throw new Error('保存に失敗しました。');

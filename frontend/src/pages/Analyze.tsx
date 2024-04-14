@@ -15,9 +15,9 @@ export default function Analyze() {
 
     const [budget, setBudget] = useState<number>(1000);
     const [hasNotCaffeine, setHasNotCaffeine] = useState(false);
-    const [feeling, setFeeling] = useState(null);
-    const [commitment, setCommitment] = useState(null);
-    const [drinkSize, setDrinkSize] = useState(null);
+    const [feeling, setFeeling] = useState<string>('');
+    const [commitment, setCommitment] = useState<string>('');
+    const [drinkSize, setDrinkSize] = useState<string>('');
 
     // 予算スライダーが更新されたとき、新しい予算の値をセットする。
     const handleBudgetChange = useCallback((newBudget: number) => {

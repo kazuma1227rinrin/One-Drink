@@ -12,4 +12,7 @@ Rails.application.routes.draw do
 
   # DrinksControllerに対する新しいルートを追加
   post 'drinks/update_drink_result', to: 'drink#update_drink_result'
+
+  # 新しいAPIエンドポイントのルート設定
+  get 'drinks/history/:user_id', to: 'drink#drink_history'  
 end

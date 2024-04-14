@@ -5,7 +5,9 @@
     
     # インターネット上のリポジトリの最新情報をローカルのシステムにダウンロードする。-qqでコマンド実行中に不要な情報を表示しない。
     # node.jsとMySQLのサーバに接続するためのクライアントソフトウェア -yですべてにyesと答える。
-    RUN apt-get update -qq && apt-get install -y nodejs default-mysql-client build-essential libmysqlclient-dev
+    # RUN apt-get update -qq && apt-get install -y nodejs default-mysql-client build-essential libmysqlclient-dev
+    RUN apt-get update -qq && apt-get install -y nodejs default-mysql-client build-essential libmariadb-dev
+
     
     # DockerコンテナはデフォルトでUTC(協定世界時)をシステム時刻として使用する。
     # TimeZoneが日本時刻になるコマンド
