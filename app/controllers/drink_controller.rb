@@ -255,5 +255,29 @@ class DrinkController < ApplicationController
         else
           render json: { status: 'error', message: 'Update failed' }
         end
+    end  
+    
+    # *******************************************************************
+
+    def drink_history
+        # 現在ログインしているユーザーのidを取得
+        user_id = params[:user_id]
+
+        # is_drank_flgが1になっているdrink_result_logsを取得
+        drink_results = DrinkResultLog.where(user_id: user_id, is_drank_flg: 1)
+
+        # binding.pry
+
+        # ↓↓↓これがおかしい！！！
+        # 必要なデータのみを選択してJSON形式で返す
+        drinks_data = drink_results.map do |drink|
+            {
+            id: drink.id,
+            image: drink.image,
+            name: drink.drink_name,
+            }
+        end
+
+        render json: drinks_data  
     end    
 end
