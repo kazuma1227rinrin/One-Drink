@@ -264,17 +264,19 @@ class DrinkController < ApplicationController
         user_id = params[:user_id]
 
         # is_drank_flgが1になっているdrink_result_logsを取得
-        drink_results = DrinkResultLog.where(user_id: user_id, is_drank_flg: 1)
+        drink_results = DrinkResultLog.includes(custom_drank_logs: :custom).where(user_id: user_id, is_drank_flg: 1)
 
-        # binding.pry
-
-        # ↓↓↓これがおかしい！！！
         # 必要なデータのみを選択してJSON形式で返す
         drinks_data = drink_results.map do |drink|
+            custom_names = drink.custom_drank_logs.map do |cdl|
+                # Customが存在しない場合に備えてnilチェックを行う
+                cdl.custom ? cdl.custom.name : "-"
+            end
             {
-            id: drink.id,
-            image: drink.image,
-            name: drink.drink_name,
+                id: drink.id,
+                image: drink.image,
+                name: drink.drink_name,
+                customs: custom_names
             }
         end
 
