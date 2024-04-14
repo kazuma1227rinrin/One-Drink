@@ -52,6 +52,9 @@ const History = () => {
                         <VStack key={drink.id} p="5" m="2" boxShadow="base" align="center" spacing="5">
                             <Image src={`https://product.starbucks.co.jp${drink.image}`} boxSize="150px" />
                             <Text fontSize="lg">{drink.name}</Text>
+                            {drink.customs && drink.customs.map((custom, index) => (
+                                <Text key={index}>・{custom}</Text>
+                            ))}
                             <HStack spacing="10">
                                 <Button colorScheme="blue" onClick={() => {}}>カスタム編集</Button>
                                 <Button colorScheme="green" onClick={() => {}}>コメント編集</Button>
