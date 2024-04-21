@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Flex } from "@chakra-ui/react";
 import styled from 'styled-components';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 // スタイリングされたFlexコンテナを定義
 const StyledFlex = styled(Flex)`
@@ -17,14 +18,27 @@ const RightAlignedButton = styled(Button)`
 `;
 
 export const TopButtonArea = () => {
+
+    const router = useRouter(); // useRouterフックを使用してrouterオブジェクトを取得
+
+    // ルーティング関数
+    const handleHistoryClick = () => {
+        router.push('/History'); // '/History'へプログラム的に画面遷移
+    };
+
+    // ランダムで診断する関数
+    const randomAnalyze = () => {
+        alert("coming soon...")
+    };
+
     return (
         <StyledFlex>
             <Link href="/" passHref>
                 <Button as="a">ログアウト</Button>
             </Link>
             <div>
-                <RightAlignedButton>飲んだ履歴</RightAlignedButton>
-                <RightAlignedButton>ランダムで診断</RightAlignedButton>
+                <RightAlignedButton onClick={handleHistoryClick}>飲んだ履歴</RightAlignedButton>
+                <RightAlignedButton onClick={randomAnalyze}>ランダムで診断</RightAlignedButton>
             </div>
         </StyledFlex>
     )

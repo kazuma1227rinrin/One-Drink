@@ -40,7 +40,6 @@ const CommentEdit = () => {
     try {
       const response = await axios.post(`http://localhost:3000/update_comment/${id}`, { comment: drinkDetails.comment });
       if (response.data.status === 'success') {
-        alert('コメントが更新されました！');
         router.push('/History');
       } else {
         alert('コメントの更新に失敗しました。');

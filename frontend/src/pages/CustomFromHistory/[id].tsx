@@ -62,7 +62,6 @@ const CustomFromHistory = () => {
         custom_ids: customIds
       });
       if (response.data.status === 'success') {
-        alert('カスタムが更新されました！');
         router.push('/History');
       } else {
         alert('更新に失敗しました。' + response.data.message);
