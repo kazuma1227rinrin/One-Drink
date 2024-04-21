@@ -264,7 +264,9 @@ class DrinkController < ApplicationController
         user_id = params[:user_id]
 
         # is_drank_flgが1になっているdrink_result_logsを取得
-        drink_results = DrinkResultLog.includes(custom_drank_logs: :custom).where(user_id: user_id, is_drank_flg: 1)
+        drink_results = DrinkResultLog.includes(custom_drank_logs: :custom)
+                                        .where(user_id: user_id, is_drank_flg: 1)
+                                        .order(id: :desc)
 
         # 必要なデータのみを選択してJSON形式で返す
         drinks_data = drink_results.map do |drink|
@@ -276,10 +278,62 @@ class DrinkController < ApplicationController
                 id: drink.id,
                 image: drink.image,
                 name: drink.drink_name,
-                customs: custom_names
+                size: drink.size,
+                customs: custom_names,
+                calories: drink.calorie, 
+                protein: drink.protein,
+                description: drink.description,
+                comments: drink.comment.presence || "***" 
             }
         end
 
         render json: drinks_data  
+    end  
+    
+    # *******************************************************************
+
+    def showCustomFromHistory
+
+        # ドリンクの情報を取得
+        drink = DrinkResultLog.find(params[:id]) #@いるかも #いらなさそう
+        
+        customs = drink.customs
+
+        # Customsテーブルからすべてのレコードを取得
+        allCustoms = Custom.all      
+
+        # JSONとしてフロントエンドに渡すデータを構成(ここまで取れていることを確認した)
+        response_data = {
+            drink: drink,
+            customs: customs,
+            allCustoms: allCustoms
+        }
+
+        render json: response_data
+    end 
+    
+    # *******************************************************************
+    
+    def update_custom
+        drink = DrinkResultLog.find(params[:id])
+
+        # トランザクションを開始
+        ActiveRecord::Base.transaction do
+            drink.custom_drank_logs.destroy_all # 既存のカスタムログを一括削除
+
+            params[:custom_ids].each do |custom_id|
+            custom = Custom.find_by(id: custom_id)
+            raise ActiveRecord::RecordNotFound, "Custom with ID #{custom_id} does not exist." unless custom
+
+            CustomDrankLog.create!(
+                drink_result_log_id: drink.id,
+                custom_id: custom.id
+            )
+            end
+        end
+    
+        render json: { status: 'success' }
+      rescue => e
+        render json: { status: 'error', message: e.message }
     end    
 end

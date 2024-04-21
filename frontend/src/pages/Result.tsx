@@ -4,7 +4,6 @@ import { Footer } from "@/components/Footer";
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Box, Button, ChakraProvider, Image, Text, Flex } from '@chakra-ui/react';
-import Link from 'next/link';
 import { Pie } from 'react-chartjs-2';
 import {
     Chart as ChartJS,

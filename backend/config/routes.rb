@@ -15,4 +15,11 @@ Rails.application.routes.draw do
 
   # 新しいAPIエンドポイントのルート設定
   get 'drinks/history/:user_id', to: 'drink#drink_history'  
+
+  # 履歴画面からカスタム画面に飛ぶときにカスタムをDBから取得する際
+  # get 'drinks/history/customs/:id', to: 'drink#showCustomFromHistory'  
+  get 'drinks/:id', to: 'drink#showCustomFromHistory'  
+
+  # ドリンクのカスタム情報を更新するためのルーティング
+  post 'drinks/update/:id', to: 'drink#update_custom'
 end

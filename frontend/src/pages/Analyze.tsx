@@ -46,9 +46,7 @@ export default function Analyze() {
     
     return (
         <>
-        <div style={{ paddingBottom: '1px' }}>
-            <Header/>
-        </div>
+        <Header/>
         <ChakraProvider>
             <TopButtonArea/>
             <Title/>
@@ -65,9 +63,7 @@ export default function Analyze() {
                 drinkSize={drinkSize} 
             />
         </ChakraProvider>
-        <div>
-            <Footer/>        
-        </div>
+        <Footer/>        
         </>
     );
 }

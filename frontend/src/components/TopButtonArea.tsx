@@ -19,8 +19,8 @@ const RightAlignedButton = styled(Button)`
 export const TopButtonArea = () => {
     return (
         <StyledFlex>
-            <Link href="/">
-                <Button>ログアウト</Button>
+            <Link href="/" passHref>
+                <Button as="a">ログアウト</Button>
             </Link>
             <div>
                 <RightAlignedButton>飲んだ履歴</RightAlignedButton>
