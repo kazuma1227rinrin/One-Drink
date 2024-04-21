@@ -244,7 +244,7 @@ class DrinkController < ApplicationController
         user_id = params[:user_id] # ユーザーIDをパラメータから取得
         custom_ids = params[:custom_ids] # カスタムIDの配列をパラメータから取得
     
-        # 最新のdrink_result_logsのレコードを取得してis_drank_flgを更新
+        # 最新のdrink_result_logsのレコードを取得してis_drank_flgを1に更新
         latest_drink_result = DrinkResultLog.where(user_id: user_id).order(id: :desc).first
         if latest_drink_result.update(is_drank_flg: 1)
           # カスタムIDごとにcustom_drank_logsにレコードを作成

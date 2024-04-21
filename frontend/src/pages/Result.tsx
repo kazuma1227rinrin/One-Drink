@@ -48,6 +48,22 @@ const Result = () => {
         fetchResultData();
     }, []);
 
+    const handleDrinkThis = async () => {
+        try {
+            const response = await axios.post(`http://localhost:3000/drinks/update_drink_result`, {
+                user_id: userId,
+                custom_ids: []  // 結果画面から登録する場合、カスタムの更新は必要ないので空の配列を送る
+            });
+            if (response.data.status === 'success') {
+                router.push('/History');
+            } else {
+                throw new Error('フラグの更新に失敗しました。');
+            }
+        } catch (error) {
+            console.error("フラグの更新に失敗しました。", error);
+        }
+    };    
+
     if (!resultData) {
         return <div>Loading...</div>;
     }
@@ -89,7 +105,7 @@ const Result = () => {
                 <Flex justifyContent="center" mt="4">
                     <Button colorScheme="blue" as="a" href="/Analyze">再診断</Button>
                     <Button colorScheme="green" onClick={() => router.push('/Custom')}>カスタムを編集</Button>
-                    <Button colorScheme="teal">これを飲む！</Button>
+                    <Button colorScheme="teal" onClick={handleDrinkThis}>これを飲む！</Button>
                 </Flex>
                 <Pie data={chartData} />
             </ChakraProvider>
