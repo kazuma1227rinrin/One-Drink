@@ -22,4 +22,9 @@ Rails.application.routes.draw do
 
   # ドリンクのカスタム情報を更新するためのルーティング
   post 'drinks/update/:id', to: 'drink#update_custom'
+
+  # ドリンクのコメントを編集するためのルーティング
+  get 'comment/:id', to: 'drink#show_comment'
+
+  post 'update_comment/:id', to: 'drink#update_comment'
 end
