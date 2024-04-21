@@ -69,7 +69,9 @@ const History = () => {
                                 <Text fontSize="md" fontStyle="italic" >商品説明: {drink.description}</Text>
                                 {drink.comments && <Text fontSize="md" fontStyle="italic" >コメント: {drink.comments}</Text>}
                                 <HStack spacing="10" align="right">
-                                    <Button colorScheme="green">コメント編集</Button>
+                                    <Link href={`/CommentEdit/${drink.id}`} passHref>
+                                        <Button as="a" colorScheme="green">コメント編集</Button>
+                                    </Link>                                    
                                 </HStack>
                             </VStack>
                         </HStack>
