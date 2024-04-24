@@ -6,10 +6,23 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 import { ChakraProvider, Box, Button, Container, Textarea, Image, Text, List, ListItem } from '@chakra-ui/react';
 
+interface Custom {
+  id: number;
+  name: string;
+}
+
+interface DrinkDetails {
+  image: string;
+  drink_name: string;
+  size: string;
+  comment: string;
+  customs: Custom[];
+}
+
 const CommentEdit = () => {
   const router = useRouter();
   const { id } = router.query; // URLからドリンクIDを取得
-  const [drinkDetails, setDrinkDetails] = useState({
+  const [drinkDetails, setDrinkDetails] = useState<DrinkDetails>({
     image: '',
     drink_name: '',
     size: '',
@@ -55,7 +68,7 @@ const CommentEdit = () => {
       <Header />
       <ChakraProvider>
         <Container maxW="container.md" centerContent>
-          <TitleComment title="コメント編集" />
+          <TitleComment/>
           {drinkDetails.image && (
             <Image src={`https://product.starbucks.co.jp${drinkDetails.image}`} alt="Drink Image" boxSize="300px" mt="4" />
           )}

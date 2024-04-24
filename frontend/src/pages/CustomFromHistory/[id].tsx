@@ -2,7 +2,7 @@ import { Header } from "@/components/Header";
 import {TitleCustom} from "@/components/TitleCustom";
 import {Footer} from "@/components/Footer";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ChangeEvent } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import {
@@ -16,21 +16,40 @@ import {
   Text
 } from '@chakra-ui/react';
 
+interface Custom {
+  id: string;  // IDが文字列型の場合
+  name?: string;  // nameはオプショナルなプロパティである場合
+  // その他のプロパティがあればここに追加
+}
+
+interface Drink {
+  image: string;
+  name: string;
+  drink_name: string;
+  size: string;
+}
+
+interface CustomOption {
+  id: string;
+  name: string;
+}
+
 const CustomFromHistory = () => {
   const router = useRouter();
   const { id } = router.query; // URLからidを取得
-  const [drink, setDrink] = useState(null);
-  const [selectedCustoms, setSelectedCustoms] = useState([]);
-  const [allCustoms, setAllCustoms] = useState([]);
+  const [drink, setDrink] = useState<Drink | null>(null);
+  const [selectedCustoms, setSelectedCustoms] = useState<Custom[]>([]);
+  const [allCustoms, setAllCustoms] = useState<CustomOption[]>([]);
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
+    let isActive = true;
     const fetchData = async () => {
       if (!id) return;
       try {
         const response = await axios.get(`http://localhost:3000/drinks/${id}`);
         setDrink(response.data.drink);
-        const initialCustoms = response.data.customs.map(custom => ({ id: custom.id }));
+        const initialCustoms = response.data.customs.map((custom: Custom) => ({ id: custom.id }));
         // 元々紐付いているカスタムに加えて、必要な数の空のプルダウンを追加して合計3つになるようにする
         for (let i = initialCustoms.length; i < 3; i++) {
           initialCustoms.push({ id: '' });
@@ -43,13 +62,17 @@ const CustomFromHistory = () => {
       }
     };
     fetchData();
+    return () => {
+      isActive = false;  // クリーンアップ関数
+    };    
   }, [id]);
 
-  const handleCustomChange = (index, event) => {
+  const handleCustomChange = (index: number, event: ChangeEvent<HTMLSelectElement>) => {
     const updatedCustoms = [...selectedCustoms];
     const value = event.target.value;
     // 数値チェックを追加し、不正な入力を防ぐ
-    updatedCustoms[index] = { id: value === '' ? '' : parseInt(value) };
+    // updatedCustoms[index] = { id: value === '' ? '' : parseInt(value) };
+    updatedCustoms[index] = { id: value };
     setSelectedCustoms(updatedCustoms);
   };
 

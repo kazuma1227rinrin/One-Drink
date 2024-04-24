@@ -19,8 +19,20 @@ import Link from 'next/link';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
+interface Drink {
+    id: string;
+    image: string;
+    name: string;
+    size: string;
+    calories: number;
+    protein: number;
+    customs: string[];
+    description: string;
+    comments?: string; 
+}
+
 const History = () => {
-    const [drinks, setDrinks] = useState([]);
+    const [drinks, setDrinks] = useState<Drink[]>([]);
     const userId = 0;
 
     useEffect(() => {
@@ -50,13 +62,13 @@ const History = () => {
                     {drinks.map(drink => (
                         <HStack key={drink.id} p="5" m="2" boxShadow="base" align="center" spacing="5">
                             <VStack>
-                                <Image src={`https://product.starbucks.co.jp${drink.image}`} boxSize="150px" />
+                                <Image src={`https://product.starbucks.co.jp${drink.image}`} boxSize="150px" alt="商品画像"/>
                                 <Text fontSize="lg">{drink.name}({drink.size})</Text>
                                 <Box>
                                     <Badge colorScheme="green">カロリー: {drink.calories}</Badge>
                                     <Badge ml="2" colorScheme="blue">タンパク質: {drink.protein}</Badge>
                                 </Box>
-                                <Box align="left" >
+                                <Box textAlign="left" >
                                 {drink.customs && drink.customs.map((custom, index) => (
                                     <Text key={index}>・{custom}</Text>
                                 ))}
