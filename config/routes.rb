@@ -26,5 +26,9 @@ Rails.application.routes.draw do
   # ドリンクのコメントを編集するためのルーティング
   get 'comment/:id', to: 'drink#show_comment'
 
+  # ドリンクのコメントを更新するためのルーティング
   post 'update_comment/:id', to: 'drink#update_comment'
+
+  # サインアップ時のルーティング
+  post '/signup', to: 'users#create'
 end
