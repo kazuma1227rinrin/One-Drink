@@ -27,6 +27,7 @@ type formInputs = {
   email: string
   password: string
   passwordConfirmation: string
+  name: string
 }
 
 export default function SignUpScreen() {
@@ -46,7 +47,8 @@ export default function SignUpScreen() {
     await signUpWithEmail({
         email: data.email, 
         password: data.password,
-        passwordConfirmation: data.passwordConfirmation
+        passwordConfirmation: data.passwordConfirmation,
+        name: data.name
     }).then((res: FirebaseResult) => {
         if (res.isSuccess) {
           console.log('新規登録成功')
@@ -92,6 +94,17 @@ export default function SignUpScreen() {
         <Heading>新規登録</Heading>
         <form onSubmit={onSubmit}>
           <VStack alignItems='left'>
+
+            <FormControl>
+              <FormLabel htmlFor='name' textAlign='start'>
+                ニックネーム
+              </FormLabel>
+              <Input 
+                id='name' 
+                {...register('name')}                
+               />
+            </FormControl>
+
             <FormControl isInvalid={Boolean(errors.email)}>
               <FormLabel htmlFor='email' textAlign='start'>
                 メールアドレス

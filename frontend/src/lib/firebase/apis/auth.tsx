@@ -69,12 +69,15 @@ const isFirebaseError = (e: Error): e is FirebaseError => {
  * EmailとPasswordでサインアップ
  * @param email
  * @param password
+ * @param passwordConfirmation
+ * @param name
  * @returns Promise<boolean>
  */
 export const signUpWithEmail = async (args:{
   email: string,
   password: string,
   passwordConfirmation: string,
+  name: string
 }): Promise<FirebaseResult> =>{
   let result: FirebaseResult = { isSuccess: false, message: '' }
   try {
@@ -83,7 +86,8 @@ export const signUpWithEmail = async (args:{
       user: {
         email: args.email,
         password: args.password,
-        password_confirmation: args.passwordConfirmation
+        password_confirmation: args.passwordConfirmation,
+        name: args.name
       }
     });
 
@@ -92,6 +96,7 @@ export const signUpWithEmail = async (args:{
       const userCredential = await createUserWithEmailAndPassword(auth, args.email, args.password);
       if (userCredential.user) {
         console.log('Firebase registration successful');
+        result = { isSuccess: true, message: '登録に成功しました' };
         return result;
       }
     }

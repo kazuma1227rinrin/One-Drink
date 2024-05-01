@@ -15,7 +15,7 @@ class UsersController < ApplicationController
     
     # 入力フォームで取得したパラメータ受け取り
     def user_params
-        params.require(:user).permit(:email, :password, :password_confirmation)
+        params.require(:user).permit(:email, :password, :password_confirmation, :name)
         # binding.pry
     end    
 end

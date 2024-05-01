@@ -3,6 +3,7 @@ import { Button, Flex } from "@chakra-ui/react";
 import styled from 'styled-components';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { logout } from '@/lib/firebase/apis/auth';
 
 // スタイリングされたFlexコンテナを定義
 const StyledFlex = styled(Flex)`
@@ -31,11 +32,19 @@ export const TopButtonArea = () => {
         alert("coming soon...")
     };
 
+    // ログアウト処理
+    const handleLogout = async () => {
+        const result = await logout();
+        if (result.isSuccess) {
+            router.push('/'); // ログインページへリダイレクト
+        } else {
+            alert(result.message); // エラーメッセージを表示
+        }
+    };    
+
     return (
         <StyledFlex>
-            <Link href="/" passHref>
-                <Button as="a">ログアウト</Button>
-            </Link>
+            <Button onClick={handleLogout}>ログアウト</Button>
             <div>
                 <RightAlignedButton onClick={handleHistoryClick}>飲んだ履歴</RightAlignedButton>
                 <RightAlignedButton onClick={randomAnalyze}>ランダムで診断</RightAlignedButton>
