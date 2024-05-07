@@ -64,36 +64,6 @@ class DrinkController < ApplicationController
             end
         end
 
-        # ここまで値は正確に取れている
-
-        # # 条件に合う商品をフィルタリング
-        # real_drink = matched_products.select do |product|
-        #     # feelingに基づくフィルタリング
-        #     case feeling
-        #     when 'refresh'
-        #     !product["product_name_ja"].include?("ホット")
-        #     when 'focus'
-        #     if has_not_caffeine
-        #         product["nutrition_by_milk"].values.flatten.any? { |nut| nut["sugar"].to_f <= 40.0 }
-        #     else
-        #         product["nutrition_by_milk"].values.flatten.any? { |nut| nut["caffeine"].to_f >= 150.0 }
-        #     end
-        #     when 'relax'
-        #     product["product_name_ja"].include?("ホット")
-        #     else
-        #     true
-        #     end &&
-        #     # commitmentに基づくフィルタリング
-        #     case commitment
-        #     when 'lowCalorie'
-        #         product["nutrition_by_milk"].values.flatten.any? { |nut| nut["calory"].to_f <= 50.0 }
-        #     when 'protein'
-        #         product["nutrition_by_milk"].values.flatten.any? { |nut| nut["protein"].to_f >= 10.0 }
-        #     else
-        #         true
-        #     end
-        # end
-
         # 条件に合う商品をフィルタリング
         real_drink = matched_products.select do |product|
             # 条件に合致する_nutrition_by_milkの要素をフィルタリング
@@ -215,47 +185,11 @@ class DrinkController < ApplicationController
 
     # *******************************************************************
 
-    def showCustom
-        # パラメータからuser_idを取得
-        user_id = params[:user_id]
 
-        # user_idに一致し、最新のレコードを取得
-        drink_log = DrinkResultLog.where(user_id: user_id).order(created_at: :desc).first  
-
-        # Customsテーブルからすべてのレコードを取得
-        customs = Custom.all        
-
-        # 取得したレコードが存在する場合は、そのデータをJSON形式で返す
-        if drink_log
-            render json: {
-            image: drink_log.image,
-            drink_name: drink_log.drink_name,
-            size: drink_log.size, 
-            customs: customs
-            }
-        else
-            render json: { error: "Data not found" }, status: :not_found
-        end        
-    end
 
     # *******************************************************************
 
-    def update_drink_result
-        user_id = params[:user_id] # ユーザーIDをパラメータから取得
-        custom_ids = params[:custom_ids] # カスタムIDの配列をパラメータから取得
-    
-        # 最新のdrink_result_logsのレコードを取得してis_drank_flgを1に更新
-        latest_drink_result = DrinkResultLog.where(user_id: user_id).order(id: :desc).first
-        if latest_drink_result.update(is_drank_flg: 1)
-          # カスタムIDごとにcustom_drank_logsにレコードを作成
-          custom_ids.each do |custom_id|
-            CustomDrankLog.create(drink_result_log_id: latest_drink_result.id, custom_id: custom_id)
-          end
-          render json: { status: 'success' }
-        else
-          render json: { status: 'error', message: 'Update failed' }
-        end
-    end  
+ 
     
     # *******************************************************************
 
@@ -292,86 +226,17 @@ class DrinkController < ApplicationController
     
     # *******************************************************************
 
-    def showCustomFromHistory
 
-        # ドリンクの情報を取得
-        drink = DrinkResultLog.find(params[:id]) #@いるかも #いらなさそう
-        
-        customs = drink.customs
-
-        # Customsテーブルからすべてのレコードを取得
-        allCustoms = Custom.all      
-
-        # JSONとしてフロントエンドに渡すデータを構成(ここまで取れていることを確認した)
-        response_data = {
-            drink: drink,
-            customs: customs,
-            allCustoms: allCustoms
-        }
-
-        render json: response_data
-    end 
     
     # *******************************************************************
     
-    def update_custom
-        drink = DrinkResultLog.find(params[:id])
-
-        # トランザクションを開始
-        ActiveRecord::Base.transaction do
-            drink.custom_drank_logs.destroy_all # 既存のカスタムログを一括削除
-
-            params[:custom_ids].each do |custom_id|
-            custom = Custom.find_by(id: custom_id)
-            raise ActiveRecord::RecordNotFound, "Custom with ID #{custom_id} does not exist." unless custom
-
-            CustomDrankLog.create!(
-                drink_result_log_id: drink.id,
-                custom_id: custom.id
-            )
-            end
-        end
-    
-        render json: { status: 'success' }
-      rescue => e
-        render json: { status: 'error', message: e.message }
-    end  
+ 
     
     # *******************************************************************
 
-    def show_comment
-        drink_result_log = DrinkResultLog.includes(:customs).find_by(id: params[:id])
 
-        if drink_result_log
-          # ドリンク結果が存在すれば、詳細情報を返す
-          drink_details = {
-            image: drink_result_log.image,
-            drink_name: drink_result_log.drink_name,
-            size: drink_result_log.size, 
-            comment: drink_result_log.comment,
-            customs: drink_result_log.customs.map { |custom| { id: custom.id, name: custom.name } }
-          }
-          render json: drink_details
-        else
-          # ドリンク結果が見つからない場合はエラーメッセージを返す
-          render json: { status: 'error', message: 'Drink result not found' }, status: :not_found
-        end
-    end  
 
     # *******************************************************************
 
-    def update_comment
-        drink_result_log = DrinkResultLog.find_by(id: params[:id])
 
-        if drink_result_log.nil?
-          render json: { status: 'error', message: 'Drink result not found' }, status: :not_found
-          return
-        end
-    
-        if drink_result_log.update(comment: params[:comment])
-          render json: { status: 'success', message: 'Comment updated successfully' }
-        else
-          render json: { status: 'error', message: 'Failed to update comment', errors: drink_result_log.errors.full_messages }, status: :unprocessable_entity
-        end        
-    end
 end
