@@ -1,6 +1,7 @@
 import '@/styles/globals.css'
 import { SessionProvider } from 'next-auth/react'
 import type { AppProps } from 'next/app'
+import { AuthProvider } from '@/contexts/AuthProvider';  // AuthProvider の正しいパスを指定してください
 
 // pagePropsにsessionを含むAppPropsの型を拡張します。
 type ExtendedAppProps = AppProps & {
@@ -12,7 +13,10 @@ type ExtendedAppProps = AppProps & {
 export default function App({ Component, pageProps }: ExtendedAppProps) {
   return (
     <SessionProvider session={pageProps.session}>
-      <Component {...pageProps} />
+      {/* AuthProvider を追加して、Firebaseユーザー情報をアプリケーション全体で利用できるようにします */}
+      <AuthProvider>
+        <Component {...pageProps} />
+      </AuthProvider>
     </SessionProvider>
   )
 }
