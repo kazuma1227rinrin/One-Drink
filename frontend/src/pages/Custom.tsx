@@ -14,6 +14,7 @@ import {
     Flex,
     Button 
 } from '@chakra-ui/react';
+import { useAuth } from '@/contexts/AuthProvider';
 
 // ResultDataの型定義
 interface ResultData {
@@ -33,7 +34,8 @@ const Custom = () => {
     const [resultData, setResultData] = useState<ResultData | null>(null);
     const [customOptions, setCustomOptions] = useState<CustomOption[]>([]); 
     const router = useRouter();    
-    const userId = 0;
+    const { userId } = useAuth();
+    console.log(userId); 
     
     useEffect(() => {
         // バックエンドのAPIエンドポイント
@@ -58,7 +60,7 @@ const Custom = () => {
         const customIds = Array.from(selectedCustoms).map(select => select.value);
 
         try {
-            const response = await axios.post('http://localhost:3000/drinks/update_drink_result', {
+            const response = await axios.post(`http://localhost:3000/drinks/update_drink_result/${userId}`, {
                 user_id: userId,
                 custom_ids: customIds.filter(id => id !== '-') // '-' でないものだけ送信
             });
@@ -78,35 +80,35 @@ const Custom = () => {
     }
 
     return (
-      <>
-        <Header/>
-        <ChakraProvider>
-            <TitleCustom />
-            {resultData.image && (
-            <Box display="flex" justifyContent="center" mt="4">
-                <Image src={`https://product.starbucks.co.jp${resultData.image}`} alt="Drink Image" boxSize="300px" objectFit="cover" />
-            </Box>
-            )}                
-            <Box textAlign="center" mt="4">
-                <Text fontSize="2xl">{resultData.drink_name} ({resultData.size})</Text>
-            </Box>    
-            {customOptions.length > 0 && (
-                <Box mt="4" maxWidth="sm" width="100%" marginX="auto">
-                    {Array.from({ length: 3 }).map((_, index) => (
-                        <Select key={index} placeholder="-" colorScheme="green" mt={index ? 2 : 0}>
-                            {customOptions.map(option => (
-                                <option key={option.id} value={option.id}>{option.name}</option> 
-                            ))}
-                        </Select>
-                    ))}
+        <>
+            <Header/>
+            <ChakraProvider>
+                <TitleCustom />
+                {resultData.image && (
+                <Box display="flex" justifyContent="center" mt="4">
+                    <Image src={`https://product.starbucks.co.jp${resultData.image}`} alt="Drink Image" boxSize="300px" objectFit="cover" />
                 </Box>
-            )}
-            <Flex mt="4" justifyContent="center" gap="4">
-                <Button colorScheme="teal" onClick={() => router.back()}>結果画面に戻る</Button>
-                <Button colorScheme="teal" onClick={finalizeCustoms}>これで決まり！</Button>                    
-            </Flex>                                           
-        </ChakraProvider>
-        <Footer/>        
+                )}                
+                <Box textAlign="center" mt="4">
+                    <Text fontSize="2xl">{resultData.drink_name} ({resultData.size})</Text>
+                </Box>    
+                {customOptions.length > 0 && (
+                    <Box mt="4" maxWidth="sm" width="100%" marginX="auto">
+                        {Array.from({ length: 3 }).map((_, index) => (
+                            <Select key={index} placeholder="-" colorScheme="green" mt={index ? 2 : 0}>
+                                {customOptions.map(option => (
+                                    <option key={option.id} value={option.id}>{option.name}</option> 
+                                ))}
+                            </Select>
+                        ))}
+                    </Box>
+                )}
+                <Flex mt="4" justifyContent="center" gap="4">
+                    <Button colorScheme="teal" onClick={() => router.back()}>結果画面に戻る</Button>
+                    <Button colorScheme="teal" onClick={finalizeCustoms}>これで決まり！</Button>                    
+                </Flex>                                           
+            </ChakraProvider>
+            <Footer/>        
       </>
     );
 }

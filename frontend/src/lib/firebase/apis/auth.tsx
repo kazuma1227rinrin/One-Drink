@@ -6,11 +6,14 @@ import {
   } from 'firebase/auth'
   
 import { auth } from '@/lib/firebase/config'
+import { setCookie } from 'nookies';
+import { useAuth } from '@/contexts/AuthProvider'; 
 
 /** firebaseの処理結果 */
 export type FirebaseResult = {
   isSuccess: boolean
   message: string
+  userId?: number
 }
 
 /** firebaseのエラー */
@@ -24,46 +27,51 @@ const isFirebaseError = (e: Error): e is FirebaseError => {
   return 'code' in e && 'message' in e
 }
   
-  /**
-   * EmailとPasswordでサインイン
-   * @param email
-   * @param password
-   * @returns Promise<boolean>
-   */
-  export const signInWithEmail = async (args: {
-    email: string
-    password: string
-  }): Promise<FirebaseResult> => {
-    let result: FirebaseResult = { isSuccess: false, message: '' }
-    try {
-      const user = await signInWithEmailAndPassword(
-        auth,
-        args.email,
-        args.password
-      )
-  
-      if (user) {
-        result = { isSuccess: true, message: 'ログインに成功しました' }
-      }
-    } catch (error) {
-      if (
-        error instanceof Error &&
-        isFirebaseError(error) &&
-        error.code === 'auth/user-not-found'
-      ) {
-        result = { isSuccess: false, message: 'ユーザが見つかりませんでした' }
-      } else if (
-        error instanceof Error &&
-        isFirebaseError(error) &&
-        error.code === 'auth/wrong-password'
-      ) {
-        result = { isSuccess: false, message: 'パスワードが間違っています' }
-      } else {
-        result = { isSuccess: false, message: 'ログインに失敗しました' }
-      }
+/**
+ * EmailとPasswordでサインイン
+ * @param email
+ * @param password
+ * @returns Promise<FirebaseResult>
+ */
+export const signInWithEmail = async (args: {
+  email: string,
+  password: string
+}): Promise<FirebaseResult> => {
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, args.email, args.password);
+    const token = await userCredential.user.getIdToken();
+
+    // トークンをクッキーに設定
+    setCookie(null, 'token', token, {
+      maxAge: 30 * 24 * 60 * 60,
+      path: '/',
+    });
+
+    // ユーザーIDをバックエンドから取得
+    const response = await axios.get(`http://localhost:3000/find_user_id`, {
+      params: { email: args.email }
+    });
+
+    if (response.status === 200) {
+      return { isSuccess: true, message: 'ログインに成功しました', userId: response.data.id };
+    } else {
+      return { isSuccess: false, message: 'User ID lookup failed' };
     }
-    return result
+  } catch (error) {
+    if (error instanceof Error && isFirebaseError(error)) {
+      switch (error.code) {
+        case 'auth/user-not-found':
+          return { isSuccess: false, message: 'ユーザが見つかりませんでした' };
+        case 'auth/wrong-password':
+          return { isSuccess: false, message: 'パスワードが間違っています' };
+        default:
+          return { isSuccess: false, message: 'ログインに失敗しました' };
+      }
+    } else {
+      return { isSuccess: false, message: 'An error occurred during login process' };
+    }
   }
+}
   
 /**
  * EmailとPasswordでサインアップ

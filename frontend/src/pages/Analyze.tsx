@@ -10,6 +10,7 @@ import {GetAnalysis} from "@/components/GetAnalysis";
 import {Footer} from "@/components/Footer";
 import {ChakraProvider} from "@chakra-ui/react";
 import { useState, useCallback } from "react";
+import ProtectedPage from '@/components/ProtectedPage';
 
 export default function Analyze() {
 
@@ -45,6 +46,7 @@ export default function Analyze() {
     }, []);
     
     return (
+        <ProtectedPage>
         <>
         <Header/>
         <ChakraProvider>
@@ -65,5 +67,6 @@ export default function Analyze() {
         </ChakraProvider>
         <Footer/>        
         </>
+        </ProtectedPage>
     );
 }

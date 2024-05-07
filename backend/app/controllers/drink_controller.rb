@@ -5,8 +5,8 @@ class DrinkController < ApplicationController
   
     # 商品を絞って診断結果ログテーブルに登録するメソッド
     def create
-        # テスト用ユーザID
-        user_id = 0
+
+        user_id = params[:user_id] if params[:user_id]
         
         # フロントエンドから送信されたデータを受け取る
         budget = params[:budget].to_i

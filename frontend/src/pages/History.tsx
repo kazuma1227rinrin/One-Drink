@@ -18,6 +18,7 @@ import {
 import Link from 'next/link';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { useAuth } from '@/contexts/AuthProvider';
 
 interface Drink {
     id: string;
@@ -33,7 +34,8 @@ interface Drink {
 
 const History = () => {
     const [drinks, setDrinks] = useState<Drink[]>([]);
-    const userId = 0;
+    const { userId } = useAuth();
+    console.log(userId);     
 
     useEffect(() => {
         const fetchDrinks = async () => {

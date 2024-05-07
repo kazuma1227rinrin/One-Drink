@@ -14,6 +14,8 @@ import {
 } from 'chart.js';
 import { useRouter } from 'next/router';
 import React from 'react';
+import ProtectedPage from '@/components/ProtectedPage';
+import { useAuth } from '@/contexts/AuthProvider';
 
 ChartJS.register(ArcElement, Tooltip, Legend, PieController);
 
@@ -31,7 +33,8 @@ const Result = () => {
     const [resultData, setResultData] = useState<ResultData | null>(null);
     const router = useRouter();
 
-    const userId = 0;
+    const { userId } = useAuth();
+    console.log(userId); 
 
     useEffect(() => {
         const apiUrl = `http://localhost:3000/drink/${userId}`;
@@ -50,7 +53,7 @@ const Result = () => {
 
     const handleDrinkThis = async () => {
         try {
-            const response = await axios.post(`http://localhost:3000/drinks/update_drink_result`, {
+            const response = await axios.post(`http://localhost:3000/drinks/update_drink_result/${userId}`, {
                 user_id: userId,
                 custom_ids: []  // 結果画面から登録する場合、カスタムの更新は必要ないので空の配列を送る
             });
@@ -88,6 +91,7 @@ const Result = () => {
     };
 
     return (
+        <ProtectedPage>
         <>
             <Header />
             <ChakraProvider>
@@ -111,6 +115,7 @@ const Result = () => {
             </ChakraProvider>
             <Footer />
         </>
+        </ProtectedPage>
     );
 };
 

@@ -98,6 +98,7 @@ const CustomFromHistory = () => {
   if (isLoading) return <p>Loading...</p>;
 
   return (
+
     <>
       <Header/>
       <ChakraProvider>

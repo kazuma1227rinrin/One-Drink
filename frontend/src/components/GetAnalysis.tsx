@@ -2,6 +2,7 @@ import {Button} from "@chakra-ui/react";
 import {styled} from "styled-components";
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import { useAuth } from '@/contexts/AuthProvider';
 
 interface GetAnalysisProps {
     budget: number;
@@ -14,6 +15,8 @@ interface GetAnalysisProps {
 export const GetAnalysis=({ budget, hasNotCaffeine, feeling, commitment, drinkSize }: GetAnalysisProps)=>{
 
     const router = useRouter();
+    const { userId } = useAuth();
+    console.log(userId);         
 
     const handleAnalysis = async () => {
 
@@ -21,7 +24,7 @@ export const GetAnalysis=({ budget, hasNotCaffeine, feeling, commitment, drinkSi
         const effectiveDrinkSize = drinkSize || "tall";  
         
         try {
-          const response = await axios.post('http://localhost:3000/drink', { 
+          const response = await axios.post(`http://localhost:3000/drink/${userId}`, { 
             budget, 
             hasNotCaffeine, 
             feeling, 

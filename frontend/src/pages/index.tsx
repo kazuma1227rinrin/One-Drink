@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link'
 import NextLink from 'next/link'
 import { useForm } from 'react-hook-form'
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/router'
 import {
   Button,
   Flex,
@@ -21,6 +21,7 @@ import {
 } from '@chakra-ui/react';
 import {signInWithEmail} from '@/lib/firebase/apis/auth';
 import { FirebaseResult } from '@/lib/firebase/apis/auth';
+import { useAuth } from '@/contexts/AuthProvider';
 
 type formInputs = {
   email: string;
@@ -38,6 +39,8 @@ export default function Home() {
 
   const [show, setShow] = useState<boolean>(false);
 
+  const { setUserId } = useAuth();
+
   const onSubmit = handleSubmit(async (data) => {
     // バリデーションチェック
     await signInWithEmail({
@@ -45,6 +48,7 @@ export default function Home() {
       password: data.password,
     }).then((res: FirebaseResult) => {
       if (res.isSuccess) {
+        setUserId(res.userId ?? null);
         console.log('ログイン成功')
         router.push('/Analyze');
         toast({
@@ -56,6 +60,7 @@ export default function Home() {
         });        
       } else {
         console.log('ログイン失敗')
+        console.log('res.message:', res)
         toast({
           title: "ログイン失敗",
           description: "ログインに失敗しました",
@@ -160,9 +165,6 @@ export default function Home() {
           </VStack>
         </Flex>  
       </ChakraProvider>        
-      <Link href="/Analyze" passHref>        
-        <Button>診断ページへ</Button>
-      </Link>
       <Footer />      
     </>
   );
