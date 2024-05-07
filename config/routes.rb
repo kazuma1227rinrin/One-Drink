@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   # drinkコントローラのcreateアクションへのルーティング
-  post 'drink', to: 'drink#create'
+  post 'drink/:user_id', to: 'drink#create'
   
   # drinkコントローラのshowアクションへのルーティング
   # 例: GET /drink/1
@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   get 'custom/:user_id', to: 'drink#showCustom'  
 
   # DrinksControllerに対する新しいルートを追加
-  post 'drinks/update_drink_result', to: 'drink#update_drink_result'
+  post 'drinks/update_drink_result/:user_id', to: 'drink#update_drink_result'
 
   # 新しいAPIエンドポイントのルート設定
   get 'drinks/history/:user_id', to: 'drink#drink_history'  
@@ -31,4 +31,7 @@ Rails.application.routes.draw do
 
   # サインアップ時のルーティング
   post '/signup', to: 'users#create'
+
+  # メールアドレスからユーザIDを取得するためのルーティング
+  get '/find_user_id', to: 'users#find_user_id'  
 end
