@@ -158,6 +158,7 @@ class DrinkController < ApplicationController
         # 取れた値をフロントエンドに返す
         render json: { 栄養APIのデータ: real_drink}
     end
+
     # *******************************************************************
     
     def show
@@ -183,14 +184,6 @@ class DrinkController < ApplicationController
         end
     end
 
-    # *******************************************************************
-
-
-
-    # *******************************************************************
-
- 
-    
     # *******************************************************************
 
     def drink_history
@@ -223,20 +216,21 @@ class DrinkController < ApplicationController
 
         render json: drinks_data  
     end  
-    
-    # *******************************************************************
-
-
-    
-    # *******************************************************************
-    
- 
-    
-    # *******************************************************************
-
-
 
     # *******************************************************************
 
+    # ドリンクの履歴を削除するメソッド
+    def destroy
+        drink_result_log = DrinkResultLog.find_by(id: params[:id])
+    
+        if drink_result_log
+          drink_result_log.destroy
+          render json: { message: "Drink deleted successfully" }, status: :ok
+        else
+          render json: { error: "Drink not found" }, status: :not_found
+        end
+      rescue ActiveRecord::RecordNotDestroyed => e
+        render json: { error: e.message }, status: :unprocessable_entity
+      end    
 
 end
