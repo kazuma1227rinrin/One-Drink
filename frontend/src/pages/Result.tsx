@@ -34,7 +34,7 @@ const Result = () => {
     const router = useRouter();
 
     const { userId } = useAuth();
-    console.log(userId); 
+    console.log(userId);
 
     useEffect(() => {
         const apiUrl = `http://localhost:3000/drink/${userId}`;
@@ -49,7 +49,7 @@ const Result = () => {
         };
 
         fetchResultData();
-    }, []);
+    }, [userId]);
 
     const handleDrinkThis = async () => {
         try {
@@ -65,7 +65,7 @@ const Result = () => {
         } catch (error) {
             console.error("フラグの更新に失敗しました。", error);
         }
-    };    
+    };
 
     if (!resultData) {
         return <div>Loading...</div>;
@@ -121,6 +121,7 @@ const Result = () => {
 
 export default Result;
 
-function removeHtmlTags(text: string): string {
+function removeHtmlTags(text: string | null): string {
+    if (!text) return '';
     return text.replace(/<[^>]*>?/gm, '');
 }

@@ -4,29 +4,31 @@ import { auth } from '@/lib/firebase/config';
 import { User, signInWithCustomToken, onAuthStateChanged } from 'firebase/auth';
 import nookies from 'nookies';
 
-// ユーザー情報とユーザーIDを含むコンテキストの型定義
 interface AuthContextType {
     user: User | null;
-    userId: number | null; // ユーザーIDを保持するためのステート
-    setUserId: (id: number | null) => void; // ユーザーIDを設定するための関数
+    userId: number | null;
+    setUserId: (id: number | null) => void;
 }
 
-// コンテキストの初期値設定
 const AuthContext = createContext<AuthContextType>({ user: null, userId: null, setUserId: () => {} });
 
-// AuthProvider コンポーネントのPropsの型定義
 interface AuthProviderProps {
     children: ReactNode;
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
-    const [userId, setUserId] = useState<number | null>(null); // ユーザーID用のステート
+    const [userId, setUserId] = useState<number | null>(null);
     const router = useRouter();
 
     useEffect(() => {
         // クッキーからトークンを読み取り
-        const { token } = nookies.get(null);
+        const { token, savedUserId } = nookies.get(null);
+
+        // クッキーから読み取ったuserIdを状態に設定
+        if (savedUserId) {
+            setUserId(parseInt(savedUserId));
+        }
 
         // トークンがあればFirebaseで認証状態を確認
         if (token) {
@@ -42,7 +44,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 });
         }
 
-        // ユーザー認証状態の変更を監視
         const unsubscribe = onAuthStateChanged(auth, currentUser => {
             if (currentUser !== user) {
                 setUser(currentUser);
@@ -53,9 +54,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         });
 
         return () => unsubscribe();
-    }, []);  // 依存配列を空にして、初回マウント時のみ実行
+    }, [router, user]);
 
-    // コンテキストプロバイダーにユーザーIDのステートとセッター関数を含める
+    useEffect(() => {
+        // userIdが変更されたとき、クッキーに保存
+        nookies.set(null, 'savedUserId', userId?.toString() ?? '', {
+            maxAge: 30 * 24 * 60 * 60,  // 有効期限を設定
+            path: '/'
+        });
+    }, [userId]);
+
     return (
         <AuthContext.Provider value={{ user, userId, setUserId }}>
             {children}
@@ -63,5 +71,4 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     );
 };
 
-// コンテキストを使用するためのカスタムフック
 export const useAuth = () => useContext(AuthContext);

@@ -1,4 +1,5 @@
 class CustomsController < ApplicationController
+    
     # カスタム画面にカスタムをセットするメソッド
     def showCustom
         # パラメータからuser_idを取得
