@@ -210,7 +210,8 @@ class DrinkController < ApplicationController
                 calories: drink.calorie, 
                 protein: drink.protein,
                 description: drink.description,
-                comments: drink.comment.presence || "***" 
+                comments: drink.comment.presence || "***" ,
+                isFavoriteFlg: drink.is_favorite_flg
             }
         end
 
@@ -231,6 +232,24 @@ class DrinkController < ApplicationController
         end
       rescue ActiveRecord::RecordNotDestroyed => e
         render json: { error: e.message }, status: :unprocessable_entity
-      end    
+    end
+
+    # *******************************************************************
+
+    # ドリンクのお気に入り切り替えメソッド
+    def favorite
+        drink = DrinkResultLog.find_by(id: params[:id])
+    
+        if drink
+            drink.update(is_favorite_flg: params[:isFavorite])
+            if drink.save
+                render json: { status: 'success', message: 'お気に入り状態が更新されました。' }
+            else
+                render json: { status: 'error', message: 'お気に入り状態の更新に失敗しました。' }, status: :unprocessable_entity
+            end
+        else
+            render json: { status: 'error', message: '指定されたドリンクが見つかりません。' }, status: :not_found
+        end
+    end
 
 end

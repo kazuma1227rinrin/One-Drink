@@ -25,7 +25,7 @@ import Link from 'next/link';
 import axios from 'axios';
 import { useEffect, useState, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthProvider';
-import { CloseIcon } from '@chakra-ui/icons';
+import { CloseIcon, StarIcon } from '@chakra-ui/icons';
 
 interface Drink {
     id: string;
@@ -37,6 +37,7 @@ interface Drink {
     customs: string[];
     description: string;
     comments?: string; 
+    isFavoriteFlg: boolean;
 }
 
 const History = () => {
@@ -45,6 +46,7 @@ const History = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [deleteId, setDeleteId] = useState<string | null>(null);
     const cancelRef = useRef<HTMLButtonElement>(null);
+    const [favorites, setFavorites] = useState<{ [key: string]: boolean }>({});
 
     useEffect(() => {
         const fetchDrinks = async () => {
@@ -68,6 +70,24 @@ const History = () => {
             } catch (error) {
                 console.error('削除に失敗しました:', error);
             }
+        }
+    };
+
+    const toggleFavorite = async (id: string) => {
+        // 現在のお気に入り状態を反転させる
+        const drinkToUpdate = drinks.find(drink => drink.id === id);
+        if (!drinkToUpdate) return;  // ドリンクが見つからない場合は何もしない
+    
+        const newFavStatus = !drinkToUpdate.isFavoriteFlg;
+        try {
+            // サーバーに新しい状態を送信
+            const response = await axios.post(`http://localhost:3000/drinks/favorite/${id}`, { isFavorite: newFavStatus });
+            if (response.status === 200) {
+                // UIを更新する
+                setDrinks(drinks.map(drink => drink.id === id ? { ...drink, isFavoriteFlg: newFavStatus } : drink));
+            }
+        } catch (error) {
+            console.error('お気に入りの切り替えに失敗しました:', error);
         }
     };
 
@@ -95,6 +115,12 @@ const History = () => {
                                 size="sm" 
                                 onClick={() => { setDeleteId(drink.id); onOpen(); }}
                             />
+                            <IconButton
+                                aria-label="Toggle favorite"
+                                icon={<StarIcon />}
+                                colorScheme={drink.isFavoriteFlg ? "yellow" : "gray"}  // お気に入り状態によって色を変えます
+                                onClick={() => toggleFavorite(drink.id)}
+                            />                            
                             <HStack align="center" spacing="5">
                                 <VStack>
                                     <Image src={`https://product.starbucks.co.jp${drink.image}`} boxSize="150px" alt="商品画像"/>
