@@ -19,7 +19,8 @@ import {
     AlertDialogHeader,
     AlertDialogContent,
     AlertDialogOverlay,
-    useDisclosure
+    useDisclosure,
+    Switch
 } from '@chakra-ui/react';
 import Link from 'next/link';
 import axios from 'axios';
@@ -47,6 +48,7 @@ const History = () => {
     const [deleteId, setDeleteId] = useState<string | null>(null);
     const cancelRef = useRef<HTMLButtonElement>(null);
     const [favorites, setFavorites] = useState<{ [key: string]: boolean }>({});
+    const [showFavorites, setShowFavorites] = useState(false);
 
     useEffect(() => {
         const fetchDrinks = async () => {
@@ -101,8 +103,16 @@ const History = () => {
                     </Link>
                 </StyledFlex>
                 <TitleHistory />
+                <Flex justifyContent="center" alignItems="center" mb={4}>
+                    <Text mr={2}>お気に入りのみ表示:</Text>
+                    <Switch
+                        isChecked={showFavorites}
+                        onChange={(e) => setShowFavorites(e.target.checked)}
+                        colorScheme="teal"
+                    />
+                </Flex>                
                 <Flex wrap="wrap" justifyContent="space-around">
-                    {drinks.map(drink => (
+                    {drinks.filter(drink => !showFavorites || drink.isFavoriteFlg).map(drink => (
                         <Box position="relative" key={drink.id} p="5" m="2" boxShadow="base">
                             <IconButton
                                 aria-label="Delete drink"
@@ -111,16 +121,16 @@ const History = () => {
                                 position="absolute"
                                 top="1"
                                 right="1"
-                                borderRadius="full" // Make the button round
-                                size="sm" 
+                                borderRadius="full"
+                                size="sm"
                                 onClick={() => { setDeleteId(drink.id); onOpen(); }}
                             />
                             <IconButton
                                 aria-label="Toggle favorite"
                                 icon={<StarIcon />}
-                                colorScheme={drink.isFavoriteFlg ? "yellow" : "gray"}  // お気に入り状態によって色を変えます
+                                colorScheme={drink.isFavoriteFlg ? "yellow" : "gray"}
                                 onClick={() => toggleFavorite(drink.id)}
-                            />                            
+                            />
                             <HStack align="center" spacing="5">
                                 <VStack>
                                     <Image src={`https://product.starbucks.co.jp${drink.image}`} boxSize="150px" alt="商品画像"/>
