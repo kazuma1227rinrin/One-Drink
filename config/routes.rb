@@ -13,6 +13,9 @@ Rails.application.routes.draw do
     # ドリンク履歴削除のためのルーティング
     delete 'drinks/:id', to: 'drink#destroy'
 
+    # ドリンクのお気に入り切り替えのためのルーティング
+    post 'drinks/favorite/:id', to: 'drink#favorite'
+
   #####customsコントローラ#####
     # drinkコントローラのshowアクションへのルーティング
     get 'custom/:user_id', to: 'customs#showCustom'  
