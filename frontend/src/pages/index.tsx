@@ -50,14 +50,17 @@ export default function Home() {
       if (res.isSuccess) {
         setUserId(res.userId ?? null);
         console.log('ログイン成功')
-        router.push('/Analyze');
         toast({
           title: "ログイン成功",
           description: res.message,
           status: "success",
-          duration: 2000,
+          duration: 1000,
           isClosable: true
-        });        
+        });
+        setTimeout(() => {
+          router.push('/Analyze');        
+        }, 1000);         
+        
       } else {
         console.log('ログイン失敗')
         console.log('res.message:', res)
