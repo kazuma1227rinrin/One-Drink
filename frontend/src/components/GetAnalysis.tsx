@@ -15,8 +15,8 @@ interface GetAnalysisProps {
 export const GetAnalysis=({ budget, hasNotCaffeine, feeling, commitment, drinkSize }: GetAnalysisProps)=>{
 
     const router = useRouter();
-    const { userId } = useAuth();
-    console.log(userId);         
+    const { userId, userName } = useAuth();
+    console.log(userId,userName);         
 
     const handleAnalysis = async () => {
 

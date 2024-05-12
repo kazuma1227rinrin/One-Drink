@@ -14,6 +14,7 @@ export type FirebaseResult = {
   isSuccess: boolean
   message: string
   userId?: number
+  userName?: string;
 }
 
 /** firebaseのエラー */
@@ -53,7 +54,12 @@ export const signInWithEmail = async (args: {
     });
 
     if (response.status === 200) {
-      return { isSuccess: true, message: 'ログインに成功しました', userId: response.data.id };
+      return { 
+        isSuccess: true, 
+        message: 'ログインに成功しました', 
+        userId: response.data.id,
+        userName: response.data.name 
+      };
     } else {
       return { isSuccess: false, message: 'User ID lookup failed' };
     }

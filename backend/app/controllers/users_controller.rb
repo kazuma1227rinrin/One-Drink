@@ -14,18 +14,18 @@ class UsersController < ApplicationController
     # メールアドレスからユーザIDを取得
     def find_user_id
       user = User.find_by(email: params[:email])
-        # binding.pry      
+
       if user
-          render json: { id: user.id }, status: :ok
+          render json: { id: user.id, name: user.name }, status: :ok
       else
           render json: { error: 'User not found' }, status: :not_found
       end
-    end    
+    end
     
       private
     
     # 入力フォームで取得したパラメータ受け取り
     def user_params
         params.require(:user).permit(:email, :password, :password_confirmation, :name)
-    end    
+    end
 end

@@ -39,7 +39,7 @@ export default function Home() {
 
   const [show, setShow] = useState<boolean>(false);
 
-  const { setUserId } = useAuth();
+  const { setUserId, setUserName } = useAuth();
 
   const onSubmit = handleSubmit(async (data) => {
     // バリデーションチェック
@@ -49,6 +49,7 @@ export default function Home() {
     }).then((res: FirebaseResult) => {
       if (res.isSuccess) {
         setUserId(res.userId ?? null);
+        setUserName(res.userName ?? null);
         console.log('ログイン成功')
         toast({
           title: "ログイン成功",

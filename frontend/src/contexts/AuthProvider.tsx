@@ -7,10 +7,18 @@ import nookies from 'nookies';
 interface AuthContextType {
     user: User | null;
     userId: number | null;
+    userName: string | null;
     setUserId: (id: number | null) => void;
+    setUserName: (name: string | null) => void;
 }
 
-const AuthContext = createContext<AuthContextType>({ user: null, userId: null, setUserId: () => {} });
+const AuthContext = createContext<AuthContextType>({ 
+    user: null, 
+    userId: null, 
+    userName: null,
+    setUserId: () => {} ,
+    setUserName: () => {}
+});
 
 interface AuthProviderProps {
     children: ReactNode;
@@ -19,16 +27,20 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
     const [userId, setUserId] = useState<number | null>(null);
+    const [userName, setUserName] = useState<string | null>(null);
     const router = useRouter();
 
     useEffect(() => {
         // クッキーからトークンを読み取り
-        const { token, savedUserId } = nookies.get(null);
+        const { token, savedUserId, savedUserName } = nookies.get(null);
 
         // クッキーから読み取ったuserIdを状態に設定
         if (savedUserId) {
             setUserId(parseInt(savedUserId));
         }
+        if (savedUserName) {
+            setUserName(savedUserName);
+        }        
 
         // トークンがあればFirebaseで認証状態を確認
         if (token) {
@@ -57,15 +69,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }, [router, user]);
 
     useEffect(() => {
-        // userIdが変更されたとき、クッキーに保存
         nookies.set(null, 'savedUserId', userId?.toString() ?? '', {
-            maxAge: 30 * 24 * 60 * 60,  // 有効期限を設定
+            maxAge: 30 * 24 * 60 * 60,
             path: '/'
         });
-    }, [userId]);
+        nookies.set(null, 'savedUserName', userName ?? '', {
+            maxAge: 30 * 24 * 60 * 60,
+            path: '/'
+        });
+    }, [userId, userName]);
 
     return (
-        <AuthContext.Provider value={{ user, userId, setUserId }}>
+        <AuthContext.Provider value={{ user, userId, userName, setUserId, setUserName }}>
             {children}
         </AuthContext.Provider>
     );

@@ -97,14 +97,24 @@ export default function SignUpScreen() {
         <form onSubmit={onSubmit}>
           <VStack alignItems='left'>
 
-            <FormControl>
+            <FormControl isInvalid={Boolean(errors.name)}>
               <FormLabel htmlFor='name' textAlign='start'>
                 ニックネーム
               </FormLabel>
               <Input 
                 id='name' 
-                {...register('name')}                
+                {...register('name',{
+                  required: '必須項目です',
+                  maxLength: {
+                    value: 20,
+                    message: '20文字以内で入力してください',
+                  },
+                
+                })}                
                />
+              <FormErrorMessage>
+                {errors.name && errors.name.message}
+              </FormErrorMessage>               
             </FormControl>
 
             <FormControl isInvalid={Boolean(errors.email)}>
