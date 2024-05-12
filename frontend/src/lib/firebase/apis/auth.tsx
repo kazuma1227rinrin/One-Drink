@@ -8,6 +8,7 @@ import {
 import { auth } from '@/lib/firebase/config'
 import { setCookie } from 'nookies';
 import { useAuth } from '@/contexts/AuthProvider'; 
+import nookies from 'nookies';
 
 /** firebaseの処理結果 */
 export type FirebaseResult = {
@@ -141,6 +142,9 @@ export const signUpWithEmail = async (args:{
   
     await signOut(auth)
       .then(() => {
+        nookies.destroy(null, 'token');
+        nookies.destroy(null, 'savedUserId');
+        nookies.destroy(null, 'savedUserName');        
         result = { isSuccess: true, message: 'ログアウトしました' }
       })
       .catch((error) => {

@@ -61,6 +61,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 setUser(currentUser);
             } else if (!currentUser && user) {
                 setUser(null);
+                setUser(null);
+                setUserId(null);
+                setUserName(null);                
                 router.push('/');  // ユーザーがnullで以前はログインしていた場合のみルートを変更
             }
         });
