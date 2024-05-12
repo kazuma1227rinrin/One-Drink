@@ -59,7 +59,9 @@ export default function SignUpScreen() {
             duration: 2000,
             isClosable: true,
           });
-          router.push('/');          
+          setTimeout(() => {
+            router.push('/');
+          }, 2000);               
         } else {
           console.log('新規登録失敗')
           toast({
