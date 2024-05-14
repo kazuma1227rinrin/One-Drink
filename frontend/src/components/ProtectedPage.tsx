@@ -32,7 +32,7 @@ const ProtectedPage: React.FC<ProtectedPageProps> = ({children}) => {
         fontSize: "15px",  // フォントサイズ
         textAlign: "center"  // テキストを中央に揃える
       }}>
-        ログインしてください。3秒後にログイン画面に移動します。
+        ページ移動中。少々お待ちください...
       </div>
     );
   }

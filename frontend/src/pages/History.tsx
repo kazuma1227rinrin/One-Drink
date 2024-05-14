@@ -149,7 +149,7 @@ const History = () => {
                                     </Link>
                                 </VStack>
                                 <VStack align="start" width="100%" maxW="600px">
-                                    <Text fontSize="md" fontStyle="italic">商品説明: {drink.description}</Text>
+                                    <Text fontSize="md" fontStyle="italic">商品説明: {removeHtmlTags(drink.description)}</Text>
                                     {drink.comments && <Text fontSize="md" fontStyle="italic">コメント: {drink.comments}</Text>}
                                     <HStack spacing="10" align="right">
                                         <Link href={`/CommentEdit/${drink.id}`} passHref>
@@ -198,3 +198,8 @@ const StyledFlex = styled(Flex)`
 `;
 
 export default History;
+
+function removeHtmlTags(text: string | null): string {
+    if (!text) return '';
+    return text.replace(/<[^>]*>?/gm, '');
+}

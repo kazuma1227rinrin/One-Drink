@@ -67,7 +67,7 @@ export default function Home() {
         console.log('res.message:', res)
         toast({
           title: "ログイン失敗",
-          description: "ログインに失敗しました",
+          description: res.message,
           status: "error",
           duration: 5000,
           isClosable: true
