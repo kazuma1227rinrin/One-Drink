@@ -209,7 +209,7 @@ class DrinkController < ApplicationController
                 customs: custom_names,
                 calories: drink.calorie, 
                 protein: drink.protein,
-                description: drink.description,
+                description: drink.description || "(なし)" ,
                 comments: drink.comment.presence || "***" ,
                 isFavoriteFlg: drink.is_favorite_flg
             }
