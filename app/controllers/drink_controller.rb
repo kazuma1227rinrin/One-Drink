@@ -100,11 +100,10 @@ class DrinkController < ApplicationController
             # feelingとcommitmentの両条件を満たす場合にtrue
             feeling_condition && commitment_condition
         end
-  
 
         # 条件に合う商品がない場合の処理
         if real_drink.empty?
-            render json: { error: '真の商品は見つかりませんでした。' } and return
+            render json: { error: '真の商品は見つかりませんでした。再診断してください。' }, status: :unprocessable_entity and return
         end
 
         # 最後の一品が入った配列
@@ -157,6 +156,7 @@ class DrinkController < ApplicationController
         
         # 取れた値をフロントエンドに返す
         render json: { 栄養APIのデータ: real_drink}
+        
     end
 
     # *******************************************************************
