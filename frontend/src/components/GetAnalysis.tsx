@@ -1,4 +1,4 @@
-import {Button} from "@chakra-ui/react";
+import {Button, useToast} from "@chakra-ui/react";
 import {styled} from "styled-components";
 import axios from 'axios';
 import { useRouter } from 'next/router';
@@ -16,6 +16,7 @@ export const GetAnalysis=({ budget, hasNotCaffeine, feeling, commitment, drinkSi
 
     const router = useRouter();
     const { userId, userName } = useAuth();
+    const toast = useToast();
     console.log(userId,userName);         
 
     const handleAnalysis = async () => {
@@ -31,9 +32,29 @@ export const GetAnalysis=({ budget, hasNotCaffeine, feeling, commitment, drinkSi
             commitment, 
             drinkSize: effectiveDrinkSize
           });
-          router.push('/Result'); 
+
+          if (response.data.error) {
+            toast({
+              title: 'エラー',
+              description: response.data.error,
+              status: 'error',
+              duration: 9000,
+              isClosable: true,
+              position: 'top'
+            });
+          } else {
+            router.push('/Result'); 
+          }
         } catch (error) {
           console.error('Error posting budget to backend', error);
+          toast({
+            title: '商品が見つかりませんでした！',
+            description: '他の条件で試してみてください。',
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            // position: 'top'
+          });
         }
     };
 
