@@ -65,7 +65,7 @@ export default function SignUpScreen() {
         } else {
           console.log('新規登録失敗')
           toast({
-            title: res.message,
+            title: 'メールアドレス重複登録エラー',
             description: res.message,
             status: "error",
             duration: 2000,
