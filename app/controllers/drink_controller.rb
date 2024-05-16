@@ -129,6 +129,10 @@ class DrinkController < ApplicationController
         
         # 指定されたサイズに基づいて栄養情報を取得
         nutrition_info = matched_product2["nutrition_by_milk"][drink_size].first
+
+        # 不要文字列除去メソッドを適用
+        clean_product_name = clean_text(matched_product["product_name"])
+        clean_product_note = clean_text(matched_product["product_note"])
         
         # calory、protein、sugarの値を取得
         calory = nutrition_info["calory"]
@@ -138,11 +142,11 @@ class DrinkController < ApplicationController
         # DrinkResultLogインスタンスの作成と属性の設定
         drink_result_log = DrinkResultLog.new(
             user_id: user_id,
-            drink_name: product_name,
+            drink_name: clean_product_name,
             calorie: calory,
             protein: protein,
             sugar: sugar,
-            description: product_note,
+            description: clean_product_note,
             image: image_url,
             size: drink_size
         )
@@ -158,6 +162,11 @@ class DrinkController < ApplicationController
         render json: { 栄養APIのデータ: real_drink}
         
     end
+
+    # 商標マークを文字列から除去
+    def clean_text(text)
+        text.gsub('&reg;', '')
+    end    
 
     # *******************************************************************
     

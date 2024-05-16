@@ -20,7 +20,7 @@ class UsersController < ApplicationController
         render json: { id: user.id, name: user.name }, status: :ok
       else
         # Firebaseのエラーコードフォーマットを使用
-        render json: { error: 'ユーザが見つかりませんでした', code: 'auth/user-not-found' }, status: :not_found
+        render json: { error: user.errors.full_messages, code: 'auth/user-not-found' }, status: :not_found
       end
     end
     
