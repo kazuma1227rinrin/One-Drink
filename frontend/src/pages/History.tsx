@@ -112,10 +112,19 @@ const History = () => {
                         onChange={(e) => setShowFavorites(e.target.checked)}
                         colorScheme="teal"
                     />
-                </Flex>                
-                <Flex wrap="wrap" justifyContent="space-around">
+                </Flex>
+                <Flex direction="column" alignItems="center" width="100%">
                     {drinks.filter(drink => !showFavorites || drink.isFavoriteFlg).map(drink => (
-                        <Box position="relative" key={drink.id} p="5" m="2" boxShadow="base">
+                        <Box 
+                            position="relative" 
+                            key={drink.id} 
+                            p="5" 
+                            m="2" 
+                            boxShadow="0 4px 8px rgba(0, 0, 0, 0.1), 0 -4px 8px rgba(0, 0, 0, 0.1)" // 4辺に影を追加
+                            borderRadius="md" // カードの角を少し丸める
+                            background="white" // 背景色を白に設定
+                            width={{ base: "90%", md: "80%", lg: "60%" }} // 幅を調整して中央に収める
+                        >
                             <IconButton
                                 aria-label="Delete drink"
                                 icon={<CloseIcon />}
