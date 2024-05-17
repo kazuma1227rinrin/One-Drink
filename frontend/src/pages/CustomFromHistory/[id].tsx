@@ -15,6 +15,8 @@ import {
   Container,
   Text
 } from '@chakra-ui/react';
+import ProtectedPage from '@/components/ProtectedPage';
+
 
 interface Custom {
   id: string;  // IDが文字列型の場合
@@ -98,7 +100,7 @@ const CustomFromHistory = () => {
   if (isLoading) return <p>Loading...</p>;
 
   return (
-
+    <ProtectedPage>
     <>
       <Header/>
       <ChakraProvider>
@@ -129,6 +131,7 @@ const CustomFromHistory = () => {
       </ChakraProvider>
       <Footer/>           
     </>
+    </ProtectedPage>
   );
 };
 

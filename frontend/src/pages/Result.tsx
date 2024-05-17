@@ -68,7 +68,7 @@ const Result = () => {
     };
 
     if (!resultData) {
-        return <div>Loading...</div>;
+        return <ProtectedPage><div>Loading...</div></ProtectedPage>;
     }
 
     const descriptionWithoutHtml = removeHtmlTags(resultData.description);

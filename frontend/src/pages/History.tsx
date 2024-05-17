@@ -27,6 +27,7 @@ import axios from 'axios';
 import { useEffect, useState, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthProvider';
 import { CloseIcon, StarIcon } from '@chakra-ui/icons';
+import ProtectedPage from '@/components/ProtectedPage';
 
 interface Drink {
     id: string;
@@ -94,6 +95,7 @@ const History = () => {
     };
 
     return (
+        <ProtectedPage>
         <>
             <Header />
             <ChakraProvider>
@@ -188,6 +190,7 @@ const History = () => {
             </ChakraProvider>
             <Footer />
         </>
+        </ProtectedPage>
     );
 };
 
