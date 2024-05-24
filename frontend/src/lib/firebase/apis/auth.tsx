@@ -59,33 +59,30 @@ export const signInWithEmail = async (args: {
         userName: response.data.name 
       };
     } else {
-      // ここでは通常、このコードは実行されません。
       throw new Error(response.data.code);
     }
   } catch (error) {
-    // errorがaxiosのHTTPエラーの場合、その処理を行う
     if (axios.isAxiosError(error) && error.response) {
       console.error("HTTP error code:", error.response.status);
       const errorMessage = error.response.data.error || error.response.data.code;
       return { isSuccess: false, message: errorMessage };
     } else if (error instanceof Error) {
-      // その他のエラー処理
       console.error("Error code:", error.message);
       switch (error.message) {
         case 'auth/user-not-found':
-          return { isSuccess: false, message: 'ユーザが見つかりませんでした' };
+          return { isSuccess: false, message: 'メールアドレスが存在しません' };
         case 'auth/wrong-password':
           return { isSuccess: false, message: 'パスワードが間違っています' };
         default:
           return { isSuccess: false, message: 'ログインに失敗しました' };
       }
     } else {
-      // 未知のエラー
       console.error("Unknown error:", error);
       return { isSuccess: false, message: 'An error occurred during login process' };
     }
   }
 }
+
   
 /**
  * EmailとPasswordでサインアップ
