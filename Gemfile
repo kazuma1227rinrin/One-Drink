@@ -70,3 +70,7 @@ gem 'ridgepole'
 
 # health check
 gem "timecop"
+
+group :production do
+  gem 'mysql2', '~> 0.5.5'
+end

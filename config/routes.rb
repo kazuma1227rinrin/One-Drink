@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
 
+  resources :drink
+  root 'drink#create'  
+
   #####drinkコントローラ#####
     # drinkコントローラのcreateアクションへのルーティング
     post 'drink/:user_id', to: 'drink#create'
