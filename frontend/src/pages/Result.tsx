@@ -68,7 +68,7 @@ const Result = () => {
     };
 
     if (!resultData) {
-        return <div>Loading...</div>;
+        return <ProtectedPage><div>Loading...</div></ProtectedPage>;
     }
 
     const descriptionWithoutHtml = removeHtmlTags(resultData.description);
@@ -107,9 +107,9 @@ const Result = () => {
                 </Box>
                 <Text fontSize="xl" textAlign="center" mt="4">カロリー: {resultData.calorie} kcal</Text>
                 <Flex justifyContent="center" mt="4">
-                    <Button colorScheme="blue" as="a" href="/Analyze">再診断</Button>
-                    <Button colorScheme="green" onClick={() => router.push('/Custom')}>カスタムを編集</Button>
-                    <Button colorScheme="teal" onClick={handleDrinkThis}>これを飲む！</Button>
+                    <Button colorScheme="blue" as="a" href="/Analyze" mx="2">再診断</Button>
+                    <Button colorScheme="green" onClick={() => router.push('/Custom')} mx="2">カスタムを編集</Button>
+                    <Button colorScheme="teal" onClick={handleDrinkThis} mx="2">これを飲む！</Button>
                 </Flex>
                 <Pie data={chartData} />
             </ChakraProvider>

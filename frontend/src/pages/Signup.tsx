@@ -59,11 +59,13 @@ export default function SignUpScreen() {
             duration: 2000,
             isClosable: true,
           });
-          router.push('/');          
+          setTimeout(() => {
+            router.push('/');
+          }, 2000);               
         } else {
           console.log('新規登録失敗')
           toast({
-            title: res.message,
+            title: 'メールアドレス重複登録エラー',
             description: res.message,
             status: "error",
             duration: 2000,
@@ -95,14 +97,24 @@ export default function SignUpScreen() {
         <form onSubmit={onSubmit}>
           <VStack alignItems='left'>
 
-            <FormControl>
+            <FormControl isInvalid={Boolean(errors.name)}>
               <FormLabel htmlFor='name' textAlign='start'>
                 ニックネーム
               </FormLabel>
               <Input 
                 id='name' 
-                {...register('name')}                
+                {...register('name',{
+                  required: '必須項目です',
+                  maxLength: {
+                    value: 20,
+                    message: '20文字以内で入力してください',
+                  },
+                
+                })}                
                />
+              <FormErrorMessage>
+                {errors.name && errors.name.message}
+              </FormErrorMessage>               
             </FormControl>
 
             <FormControl isInvalid={Boolean(errors.email)}>

@@ -27,6 +27,7 @@ import axios from 'axios';
 import { useEffect, useState, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthProvider';
 import { CloseIcon, StarIcon } from '@chakra-ui/icons';
+import ProtectedPage from '@/components/ProtectedPage';
 
 interface Drink {
     id: string;
@@ -94,6 +95,7 @@ const History = () => {
     };
 
     return (
+        <ProtectedPage>
         <>
             <Header />
             <ChakraProvider>
@@ -110,10 +112,19 @@ const History = () => {
                         onChange={(e) => setShowFavorites(e.target.checked)}
                         colorScheme="teal"
                     />
-                </Flex>                
-                <Flex wrap="wrap" justifyContent="space-around">
+                </Flex>
+                <Flex direction="column" alignItems="center" width="100%">
                     {drinks.filter(drink => !showFavorites || drink.isFavoriteFlg).map(drink => (
-                        <Box position="relative" key={drink.id} p="5" m="2" boxShadow="base">
+                        <Box 
+                            position="relative" 
+                            key={drink.id} 
+                            p="5" 
+                            m="2" 
+                            boxShadow="0 4px 8px rgba(0, 0, 0, 0.1), 0 -4px 8px rgba(0, 0, 0, 0.1)" // 4辺に影を追加
+                            borderRadius="md" // カードの角を少し丸める
+                            background="white" // 背景色を白に設定
+                            width={{ base: "90%", md: "80%", lg: "60%" }} // 幅を調整して中央に収める
+                        >
                             <IconButton
                                 aria-label="Delete drink"
                                 icon={<CloseIcon />}
@@ -149,7 +160,7 @@ const History = () => {
                                     </Link>
                                 </VStack>
                                 <VStack align="start" width="100%" maxW="600px">
-                                    <Text fontSize="md" fontStyle="italic">商品説明: {drink.description}</Text>
+                                    <Text fontSize="md" fontStyle="italic">商品説明: {removeHtmlTags(drink.description)}</Text>
                                     {drink.comments && <Text fontSize="md" fontStyle="italic">コメント: {drink.comments}</Text>}
                                     <HStack spacing="10" align="right">
                                         <Link href={`/CommentEdit/${drink.id}`} passHref>
@@ -188,6 +199,7 @@ const History = () => {
             </ChakraProvider>
             <Footer />
         </>
+        </ProtectedPage>
     );
 };
 
@@ -198,3 +210,8 @@ const StyledFlex = styled(Flex)`
 `;
 
 export default History;
+
+function removeHtmlTags(text: string | null): string {
+    if (!text) return '';
+    return text.replace(/<[^>]*>?/gm, '');
+}

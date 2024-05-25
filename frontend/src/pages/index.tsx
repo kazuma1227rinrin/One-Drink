@@ -19,8 +19,7 @@ import {
   ChakraProvider,
   useToast,
 } from '@chakra-ui/react';
-import {signInWithEmail} from '@/lib/firebase/apis/auth';
-import { FirebaseResult } from '@/lib/firebase/apis/auth';
+import { signInWithEmail, FirebaseResult } from '@/lib/firebase/apis/auth';
 import { useAuth } from '@/contexts/AuthProvider';
 
 type formInputs = {
@@ -39,31 +38,34 @@ export default function Home() {
 
   const [show, setShow] = useState<boolean>(false);
 
-  const { setUserId } = useAuth();
+  const { setUserId, setUserName } = useAuth();
 
   const onSubmit = handleSubmit(async (data) => {
-    // バリデーションチェック
     await signInWithEmail({
       email: data.email,
       password: data.password,
     }).then((res: FirebaseResult) => {
       if (res.isSuccess) {
         setUserId(res.userId ?? null);
+        setUserName(res.userName ?? null);
         console.log('ログイン成功')
-        router.push('/Analyze');
         toast({
           title: "ログイン成功",
           description: res.message,
           status: "success",
-          duration: 2000,
+          duration: 1000,
           isClosable: true
-        });        
+        });
+        setTimeout(() => {
+          router.push('/Analyze');        
+        }, 1000);         
+        
       } else {
         console.log('ログイン失敗')
-        console.log('res.message:', res)
+        console.log('res.message:', res.message)
         toast({
           title: "ログイン失敗",
-          description: "ログインに失敗しました",
+          description: res.message,
           status: "error",
           duration: 5000,
           isClosable: true

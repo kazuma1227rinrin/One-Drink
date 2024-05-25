@@ -1,7 +1,16 @@
-import React from 'react';
-import { Button, Flex } from "@chakra-ui/react";
+import React, { useRef } from 'react';
+import { 
+    Button, 
+    Flex, 
+    useDisclosure, 
+    AlertDialog, 
+    AlertDialogBody, 
+    AlertDialogFooter, 
+    AlertDialogHeader, 
+    AlertDialogContent, 
+    AlertDialogOverlay  
+} from "@chakra-ui/react";
 import styled from 'styled-components';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { logout } from '@/lib/firebase/apis/auth';
 
@@ -20,11 +29,13 @@ const RightAlignedButton = styled(Button)`
 
 export const TopButtonArea = () => {
 
-    const router = useRouter(); // useRouterフックを使用してrouterオブジェクトを取得
+    const router = useRouter();
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const cancelRef = useRef<HTMLButtonElement>(null);    
 
-    // ルーティング関数
+    // 履歴画面に遷移する関数
     const handleHistoryClick = () => {
-        router.push('/History'); // '/History'へプログラム的に画面遷移
+        router.push('/History');
     };
 
     // ランダムで診断する関数
@@ -36,19 +47,48 @@ export const TopButtonArea = () => {
     const handleLogout = async () => {
         const result = await logout();
         if (result.isSuccess) {
-            router.push('/'); // ログインページへリダイレクト
+            router.push('/'); 
         } else {
             alert(result.message); // エラーメッセージを表示
         }
     };    
 
     return (
+        <>
         <StyledFlex>
-            <Button onClick={handleLogout}>ログアウト</Button>
+            <Button onClick={onOpen}>ログアウト</Button>
             <div>
                 <RightAlignedButton onClick={handleHistoryClick}>飲んだ履歴</RightAlignedButton>
                 <RightAlignedButton onClick={randomAnalyze}>ランダムで診断</RightAlignedButton>
             </div>
         </StyledFlex>
+        <AlertDialog
+            isOpen={isOpen}
+            leastDestructiveRef={cancelRef}
+            onClose={onClose}
+        >
+            <AlertDialogOverlay>
+                <AlertDialogContent>
+                    <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                        ログアウト確認
+                    </AlertDialogHeader>
+                    <AlertDialogBody>
+                        ログアウトしてもよろしいですか？
+                    </AlertDialogBody>
+                    <AlertDialogFooter>
+                        <Button ref={cancelRef} onClick={onClose}>
+                            キャンセル
+                        </Button>
+                        <Button colorScheme="red" onClick={() => {
+                            handleLogout();
+                            onClose();
+                        }} ml={3}>
+                            ログアウト
+                        </Button>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialogOverlay>
+        </AlertDialog>  
+        </>      
     )
 }

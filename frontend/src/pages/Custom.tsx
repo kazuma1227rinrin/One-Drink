@@ -15,6 +15,7 @@ import {
     Button 
 } from '@chakra-ui/react';
 import { useAuth } from '@/contexts/AuthProvider';
+import ProtectedPage from '@/components/ProtectedPage';
 
 // ResultDataの型定義
 interface ResultData {
@@ -76,7 +77,7 @@ const Custom = () => {
     };    
 
     if (!resultData) {
-        return <div>データをロード中...</div>;
+        return <ProtectedPage><div>データをロード中...</div></ProtectedPage>;
     }
 
     return (
