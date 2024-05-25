@@ -5,7 +5,9 @@
     
     # インターネット上のリポジトリの最新情報をローカルのシステムにダウンロードする。-qqでコマンド実行中に不要な情報を表示しない。
     # node.jsとMySQLのサーバに接続するためのクライアントソフトウェア -yですべてにyesと答える。
-    RUN apt-get update -qq && apt-get install -y nodejs default-mysql-client
+    # RUN apt-get update -qq && apt-get install -y nodejs default-mysql-client build-essential libmysqlclient-dev
+    RUN apt-get update -qq && apt-get install -y nodejs default-mysql-client build-essential libmariadb-dev
+
     
     # DockerコンテナはデフォルトでUTC(協定世界時)をシステム時刻として使用する。
     # TimeZoneが日本時刻になるコマンド
@@ -18,7 +20,8 @@
     COPY Gemfile /one_drink/Gemfile
     COPY Gemfile.lock /one_drink/Gemfile.lock
     
-    # gem updateは必要ない # bundle installを実行したらgemファイルはアップデートされるから？
+    # "gem update" と "bundle install" を実行
+    # ただし、"gem update" の実行は必要性に応じて判断してください
     RUN gem update && \
         bundle install
     COPY . /one_drink
