@@ -10,7 +10,6 @@ gem "rails", "~> 7.0.8"
 # gem "mysql2", "~> 0.5"
 gem 'mysql2', '~> 0.5.5'
 
-
 # Use the Puma web server [https://github.com/puma/puma]
 gem 'puma', '~> 6.4'
 
@@ -73,4 +72,5 @@ gem "timecop"
 
 group :production do
   gem 'mysql2', '~> 0.5.5'
+  gem 'rails_12factor'
 end
