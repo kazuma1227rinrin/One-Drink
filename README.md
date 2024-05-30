@@ -133,22 +133,28 @@ One Drinkを実装していく中でまとめた資料のリスト
 │   ├── app
 │   │   └── channels
 │   │   └── controllers
+│   │   │   └── comment_controller.rb
+│   │   │   └── customs_controller.rb
+│   │   │   └── drink_controller.rb
+│   │   │   └── healthcheck_controller.rb
+│   │   │   └── users_controller.rb
 │   │   └── jobs
 │   │   └── mailers
 │   │   └── models
+│   │   │   └── custom_drank_log.rb
+│   │   │   └── custom.rb
+│   │   │   └── drink_result_log.rb
+│   │   │   └── user.rb
 │   │   └── views
 │   ├── bin
 │   │   └── rails
 │   │   └── rake
 │   │   └── setup
 │   ├── config
-│   │   └── [アプリケーションの設定ファイル]
+│   │   └── database.yml
+│   │   └── routes.rb
 │   ├── config.ru
 │   ├── db
-│   │   └── development.sqlite3
-│   │   └── migrate
-│   │   └── schema.rb
-│   │   └── seeds.rb
 │   ├── Gemfile
 │   ├── Gemfile.lock
 │   ├── lib
@@ -160,11 +166,10 @@ One Drinkを実装していく中でまとめた資料のリスト
 │   ├── Rakefile
 │   ├── README.md
 │   ├── storage
-│   │   └── [アップロードされたファイルのストレージ]
 │   ├── tmp
-│   │   └── [一時ファイル]
+│   ├── Dockerfile
+│   ├── Procfile
 │   └── vendor
-│       └── [サードパーティのコード]
 ├── .env
 ├── .gitignore
 ├── heroku.yml
