@@ -65,7 +65,7 @@ One Drinkを実装していく中でまとめた資料のリスト
 | Rails                 | 7.0.8      |
 | Docker                | 24.0.7     |
 
-その他のパッケージのバージョンは pyproject.toml と package.json を参照してください
+その他のパッケージのバージョンはpackage.json を参照してください
 
 
 ## ディレクトリ構成
@@ -78,35 +78,57 @@ One Drinkを実装していく中でまとめた資料のリスト
 .
 ├── frontend
 │   ├── components
-│   │   └── CreateTodoForm.tsx
-│   │   └── DeleteTodoButton.tsx
-│   │   └── EditTodoForm.tsx
-│   │   └── Todo.tsx
-│   │   └── Todos.tsx
-│   ├── next-env.d.ts
-│   ├── next.config.js
-│   ├── node_modules
-│   │   └── [依存関係のライブラリ]
+│   │   └── authServerSide.tsx
+│   │   └── BudgetSlider.tsx
+│   │   └── Caffeine.tsx
+│   │   └── Commitment.tsx
+│   │   └── DrinkSize.tsx
+│   │   └── Feeling.tsx
+│   │   └── Footer.tsx
+│   │   └── GetAnalysis.tsx
+│   │   └── Header.tsx
+│   │   └── ProtectedPage.tsx
+│   │   └── Title.tsx
+│   │   └── TitleComment.tsx
+│   │   └── TitleCustom.tsx
+│   │   └── TitleHistory.tsx
+│   │   └── TitleResult.tsx
+│   │   └── TopButtonArea.tsx
+│   ├── contexts
+│   │   └── AuthProvider.tsx
+│   ├── lib/firebase
+│   │   └── apis
+│   │   │   └── auth.tsx
+│   │   └── admin.js  
+│   │   └── config.tsx
 │   ├── package-lock.json
 │   ├── package.json
 │   ├── pages
 │   │   └── _app.tsx
 │   │   └── _document.tsx
 │   │   └── api
+│   │   │   └── auth
+│   │   │   │   └── [...nextauth].ts
+│   │   │   └── hello.ts
 │   │   └── index.tsx
-│   │   └── todos
-│   ├── postcss.config.js
-│   ├── public
-│   │   └── favicon.ico
-│   │   └── next.svg
-│   │   └── vercel.svg
+│   │   └── CommentEdit
+│   │   │   └── [id].tsx
+│   │   └── CustomFromHistory
+│   │   │   └── [id].tsx
+│   │   └── Analyze.tsx
+│   │   └── Custom.tsx
+│   │   └── History.tsx
+│   │   └── login.tsx
+│   │   └── Result.tsx
+│   │   └── Signup.tsx
+│   ├── .env.local
+│   ├── .eslintrc.json
 │   ├── README.md
-│   ├── styles
-│   │   └── globals.css
-│   ├── tailwind.config.ts
+│   ├── .yarnrc.yml
+│   ├── Dockerfile
+│   ├── next.config.js
 │   ├── tsconfig.json
-│   └── types
-│       └── Todo.ts
+│   ├── yarn.lock
 ├── backend
 │   ├── app
 │   │   └── channels
@@ -144,7 +166,10 @@ One Drinkを実装していく中でまとめた資料のリスト
 │   └── vendor
 │       └── [サードパーティのコード]
 ├── .env
+├── .gitignore
+├── heroku.yml
 └── docker-compose.yml
+  
 </pre>
 
 
