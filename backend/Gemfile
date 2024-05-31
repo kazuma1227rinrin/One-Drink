@@ -7,7 +7,6 @@ ruby "3.2.2"
 gem "rails", "~> 7.0.8"
 
 # Use mysql as the database for Active Record
-# gem "mysql2", "~> 0.5"
 gem 'mysql2', '~> 0.5.5'
 
 # Use the Puma web server [https://github.com/puma/puma]
@@ -71,6 +70,5 @@ gem 'ridgepole'
 gem "timecop"
 
 group :production do
-  # gem 'mysql2', '~> 0.5.5'
   gem 'rails_12factor'
 end
