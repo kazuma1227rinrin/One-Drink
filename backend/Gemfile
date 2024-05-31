@@ -71,6 +71,6 @@ gem 'ridgepole'
 gem "timecop"
 
 group :production do
-  gem 'mysql2', '~> 0.5.5'
+  # gem 'mysql2', '~> 0.5.5'
   gem 'rails_12factor'
 end
