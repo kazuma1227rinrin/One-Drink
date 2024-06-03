@@ -27,7 +27,7 @@ module Mouretsu
     # CORS設定を追加
     config.middleware.insert_before 0, Rack::Cors do
       allow do
-        origins '*'  # ここを特定のドメインに変更することを推奨します
+        origins 'https://one_drink.vercel.app'
         resource '*', headers: :any, methods: [:get, :post, :put, :patch, :delete, :options, :head]
       end
     end
