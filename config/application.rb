@@ -23,5 +23,13 @@ module Mouretsu
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+
+    # CORS設定を追加
+    config.middleware.insert_before 0, Rack::Cors do
+      allow do
+        origins '*'  # ここを特定のドメインに変更することを推奨します
+        resource '*', headers: :any, methods: [:get, :post, :put, :patch, :delete, :options, :head]
+      end
+    end
   end
 end
