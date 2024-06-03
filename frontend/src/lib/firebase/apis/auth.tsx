@@ -47,7 +47,7 @@ export const signInWithEmail = async (args: {
       path: '/',
     });
 
-    const response = await axios.get(`http://localhost:3000/find_user_id`, {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/find_user_id`, {
       params: { email: args.email }
     });
 
@@ -101,7 +101,7 @@ export const signUpWithEmail = async (args: {
   let result: FirebaseResult = { isSuccess: false, message: '新規登録に失敗しました' };
 
   try {
-    const response = await axios.post('http://localhost:3000/signup', {
+    const response = await axios.post('${process.env.NEXT_PUBLIC_API_BASE_URL}/signup', {
       user: {
         email: args.email,
         password: args.password,

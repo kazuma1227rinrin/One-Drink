@@ -49,7 +49,7 @@ const CustomFromHistory = () => {
     const fetchData = async () => {
       if (!id) return;
       try {
-        const response = await axios.get(`http://localhost:3000/drinks/${id}`);
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/drinks/${id}`);
         setDrink(response.data.drink);
         const initialCustoms = response.data.customs.map((custom: Custom) => ({ id: custom.id }));
         // 元々紐付いているカスタムに加えて、必要な数の空のプルダウンを追加して合計3つになるようにする
@@ -83,7 +83,7 @@ const CustomFromHistory = () => {
     const customIds = selectedCustoms.map(custom => custom.id).filter(id => id !== '');
   
     try {
-      const response = await axios.post(`http://localhost:3000/drinks/update/${id}`, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/drinks/update/${id}`, {
         custom_ids: customIds
       });
       if (response.data.status === 'success') {

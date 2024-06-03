@@ -35,7 +35,7 @@ const CommentEdit = () => {
     const fetchData = async () => {
       if (!id) return;
       try {
-        const response = await axios.get(`http://localhost:3000/comment/${id}`);
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/comment/${id}`);
         setDrinkDetails({
           image: response.data.image,
           drink_name: response.data.drink_name,
@@ -52,7 +52,7 @@ const CommentEdit = () => {
 
   const handleSaveComment = async () => {
     try {
-      const response = await axios.post(`http://localhost:3000/update_comment/${id}`, { comment: drinkDetails.comment });
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/update_comment/${id}`, { comment: drinkDetails.comment });
       if (response.data.status === 'success') {
         router.push('/History');
       } else {

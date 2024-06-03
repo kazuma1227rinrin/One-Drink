@@ -40,7 +40,7 @@ const Custom = () => {
     
     useEffect(() => {
         // バックエンドのAPIエンドポイント
-        const apiUrl = `http://localhost:3000/custom/${userId}`;
+        const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/custom/${userId}`;
 
         const fetchResultData = async () => {
             try {
@@ -61,7 +61,7 @@ const Custom = () => {
         const customIds = Array.from(selectedCustoms).map(select => select.value);
 
         try {
-            const response = await axios.post(`http://localhost:3000/drinks/update_drink_result/${userId}`, {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/drinks/update_drink_result/${userId}`, {
                 user_id: userId,
                 custom_ids: customIds.filter(id => id !== '-') // '-' でないものだけ送信
             });

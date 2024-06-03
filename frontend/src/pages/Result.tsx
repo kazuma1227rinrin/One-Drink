@@ -37,7 +37,7 @@ const Result = () => {
     console.log(userId);
 
     useEffect(() => {
-        const apiUrl = `http://localhost:3000/drink/${userId}`;
+        const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/drink/${userId}`;
 
         const fetchResultData = async () => {
             try {
@@ -53,7 +53,7 @@ const Result = () => {
 
     const handleDrinkThis = async () => {
         try {
-            const response = await axios.post(`http://localhost:3000/drinks/update_drink_result/${userId}`, {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/drinks/update_drink_result/${userId}`, {
                 user_id: userId,
                 custom_ids: []  // 結果画面から登録する場合、カスタムの更新は必要ないので空の配列を送る
             });

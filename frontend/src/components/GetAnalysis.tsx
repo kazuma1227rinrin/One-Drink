@@ -25,7 +25,7 @@ export const GetAnalysis=({ budget, hasNotCaffeine, feeling, commitment, drinkSi
         const effectiveDrinkSize = drinkSize || "tall";  
         
         try {
-          const response = await axios.post(`http://localhost:3000/drink/${userId}`, { 
+          const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/drink/${userId}`, { 
             budget, 
             hasNotCaffeine, 
             feeling, 

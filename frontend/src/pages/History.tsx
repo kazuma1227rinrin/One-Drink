@@ -54,7 +54,7 @@ const History = () => {
     useEffect(() => {
         const fetchDrinks = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/drinks/history/${userId}`);
+                const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/drinks/history/${userId}`);
                 setDrinks(response.data);
             } catch (error) {
                 console.error('Drinksの取得に失敗しました:', error);
@@ -67,7 +67,7 @@ const History = () => {
     const handleDelete = async () => {
         if (deleteId) {
             try {
-                await axios.delete(`http://localhost:3000/drinks/${deleteId}`);
+                await axios.delete(`${process.env.NEXT_PUBLIC_API_BASE_URL}/drinks/${deleteId}`);
                 setDrinks(drinks.filter(drink => drink.id !== deleteId));
                 onClose(); // 削除ダイアログを閉じる
             } catch (error) {
@@ -84,7 +84,7 @@ const History = () => {
         const newFavStatus = !drinkToUpdate.isFavoriteFlg;
         try {
             // サーバーに新しい状態を送信
-            const response = await axios.post(`http://localhost:3000/drinks/favorite/${id}`, { isFavorite: newFavStatus });
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/drinks/favorite/${id}`, { isFavorite: newFavStatus });
             if (response.status === 200) {
                 // UIを更新する
                 setDrinks(drinks.map(drink => drink.id === id ? { ...drink, isFavoriteFlg: newFavStatus } : drink));
