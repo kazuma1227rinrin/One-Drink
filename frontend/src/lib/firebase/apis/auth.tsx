@@ -101,7 +101,7 @@ export const signUpWithEmail = async (args: {
   let result: FirebaseResult = { isSuccess: false, message: '新規登録に失敗しました' };
 
   try {
-    const response = await axios.post('${process.env.NEXT_PUBLIC_API_BASE_URL}/signup', {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/signup`, {
       user: {
         email: args.email,
         password: args.password,
