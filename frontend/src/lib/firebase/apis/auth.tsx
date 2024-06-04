@@ -98,6 +98,8 @@ export const signUpWithEmail = async (args: { email: string; password: string; p
         password_confirmation: args.passwordConfirmation,
         name: args.name,
       },
+    },{
+      withCredentials: true
     });
 
     if (response.status === 201) {
