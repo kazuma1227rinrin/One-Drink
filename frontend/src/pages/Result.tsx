@@ -38,6 +38,7 @@ const Result = () => {
 
     useEffect(() => {
         const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/drink/${userId}`;
+        console.log(`Fetching data from URL: ${apiUrl}`);
 
         const fetchResultData = async () => {
             try {
