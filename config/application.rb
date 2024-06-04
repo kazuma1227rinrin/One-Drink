@@ -28,7 +28,11 @@ module Mouretsu
     config.middleware.insert_before 0, Rack::Cors do
       allow do
         origins 'https://one-drink-hhz6ddc1r-kazuma1227rinrins-projects.vercel.app'
-        resource '*', headers: :any, methods: [:get, :post, :put, :patch, :delete, :options, :head]
+        resource '*',
+          headers: :any,
+          methods: [:get, :post, :put, :patch, :delete, :options, :head],
+          expose: ['Access-Control-Allow-Origin'], # レスポンスヘッダーに追加するヘッダー
+          max_age: 600
       end
     end
   end
