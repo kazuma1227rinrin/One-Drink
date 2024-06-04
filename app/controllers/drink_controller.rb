@@ -173,6 +173,7 @@ class DrinkController < ApplicationController
     def show
         # パラメータからuser_idを取得
         user_id = params[:user_id]
+        puts "Received user_id: #{user_id}"
     
         # user_idに一致し、最新のレコードを取得
         drink_log = DrinkResultLog.where(user_id: user_id).order(created_at: :desc).first  
