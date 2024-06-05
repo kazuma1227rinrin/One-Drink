@@ -38,6 +38,7 @@ One Drink
 ## 実装にあたって作成したドキュメント
 
 One Drinkを実装していく中でまとめた資料のリスト
+- [仕様書](https://docs.google.com/document/d/1iOrX4T2-wb7mJcYVpBtqk7K19izc-VF4PFOUmbJV-SA/edit)
 - [実装にあたって工夫したこと](https://docs.google.com/document/d/1U8vTURSIyvIPIQ12jtIiMRYYu1lwYdQvUoEJKVngd1U/edit)
 - [画面設計書](https://www.figma.com/design/KMj7BLt6yR5Kr9waXtTR3c/%E3%82%B9%E3%82%BF%E3%83%90%E3%81%AE%E3%83%89%E3%83%AA%E3%83%B3%E3%82%AF%E8%A8%BA%E6%96%AD3?node-id=0-1)
 - [テーブル定義書](https://docs.google.com/spreadsheets/d/1d18k20CmCinSB2mBI2ZEfikMWh3OUloQ-GV__V-xsuU/edit#gid=0)
