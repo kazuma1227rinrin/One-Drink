@@ -8,7 +8,7 @@ Rails.application.routes.draw do
     post 'drink/:user_id', to: 'drink#create'
   
     # drinkコントローラのshowアクションへのルーティング
-    get 'drink/:user_id', to: 'drink#show'
+    get 'drink/:id', to: 'drink#show'
 
     # 新しいAPIエンドポイントのルート設定
     get 'drinks/history/:user_id', to: 'drink#drink_history'  

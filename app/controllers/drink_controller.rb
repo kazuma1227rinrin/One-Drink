@@ -172,7 +172,7 @@ class DrinkController < ApplicationController
     
     def show
         # パラメータからuser_idを取得
-        user_id = params[:user_id]
+        user_id = params[:id]
         puts "Received user_id: #{user_id}"
     
         # user_idに一致し、最新のレコードを取得
