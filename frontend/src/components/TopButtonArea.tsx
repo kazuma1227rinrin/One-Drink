@@ -16,9 +16,15 @@ import { logout } from '@/lib/firebase/apis/auth';
 
 // スタイリングされたFlexコンテナを定義
 const StyledFlex = styled(Flex)`
-    justify-content: space-between;
+    justify-content: center;
     width: 100%;
     margin-top: 8px; 
+`;
+
+// 左寄せボタン用のスタイリングを適用
+const LeftAlignedButton = styled(Button)`
+    margin-right: auto; // 右側のボタンとの隙間を自動調整
+    margin-top: 8px;
 `;
 
 // 右寄せボタン用のスタイリングを適用
@@ -56,7 +62,7 @@ export const TopButtonArea = () => {
     return (
         <>
         <StyledFlex>
-            <Button onClick={onOpen}>ログアウト</Button>
+            <LeftAlignedButton onClick={onOpen}>ログアウト</LeftAlignedButton>
             <div>
                 <RightAlignedButton onClick={handleHistoryClick}>飲んだ履歴</RightAlignedButton>
                 <RightAlignedButton onClick={randomAnalyze}>ランダムで診断</RightAlignedButton>
