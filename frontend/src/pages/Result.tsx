@@ -109,7 +109,7 @@ const Result = () => {
                         <strong>説明:</strong> {descriptionWithoutHtml}
                     </Box>
                     <Text fontSize="xl" textAlign="center" mt="4">カロリー: {resultData.calorie} kcal</Text>
-                    <Flex justifyContent="center" mt="4">
+                    <Flex justifyContent="center" mt="4" mb="6">
                         <Button colorScheme="blue" as="a" href="/Analyze" mx="2">再診断</Button>
                         <Button colorScheme="green" onClick={() => router.push('/Custom')} mx="2">カスタムを編集</Button>
                         <Button colorScheme="teal" onClick={handleDrinkThis} mx="2">これを飲む！</Button>

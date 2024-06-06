@@ -47,4 +47,5 @@ const Sp = styled.p`
 text-align: center; /* テキストを中央に配置する */
 margin: 0; /* 上下のマージンをなくす */
 padding: 20px; /* 余白を追加する */
+margin-bottom: 20px;
 `
