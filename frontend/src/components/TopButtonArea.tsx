@@ -21,16 +21,10 @@ const StyledFlex = styled(Flex)`
     margin-top: 8px; 
 `;
 
-// 左寄せボタン用のスタイリングを適用
-const LeftAlignedButton = styled(Button)`
-    margin-right: auto; // 右側のボタンとの隙間を自動調整
+// ボタン用のスタイリングを適用
+const CenteredButton = styled(Button)`
+    margin: 0 8px; // ボタン間の隙間を設定
     margin-top: 8px;
-`;
-
-// 右寄せボタン用のスタイリングを適用
-const RightAlignedButton = styled(Button)`
-    margin-left: 8px; // ボタン間の隙間を設定
-    margin-top: 8px; 
 `;
 
 export const TopButtonArea = () => {
@@ -62,11 +56,9 @@ export const TopButtonArea = () => {
     return (
         <>
         <StyledFlex>
-            <LeftAlignedButton onClick={onOpen}>ログアウト</LeftAlignedButton>
-            <div>
-                <RightAlignedButton onClick={handleHistoryClick}>飲んだ履歴</RightAlignedButton>
-                <RightAlignedButton onClick={randomAnalyze}>ランダムで診断</RightAlignedButton>
-            </div>
+            <CenteredButton onClick={onOpen}>ログアウト</CenteredButton>
+            <CenteredButton onClick={handleHistoryClick}>飲んだ履歴</CenteredButton>
+            <CenteredButton onClick={randomAnalyze}>ランダムで診断</CenteredButton>
         </StyledFlex>
         <AlertDialog
             isOpen={isOpen}
