@@ -16,6 +16,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import ProtectedPage from '@/components/ProtectedPage';
 import { useAuth } from '@/contexts/AuthProvider';
+import styled from 'styled-components';
 
 ChartJS.register(ArcElement, Tooltip, Legend, PieController);
 
@@ -97,22 +98,24 @@ const Result = () => {
             <Header />
             <ChakraProvider>
                 <TitleResult />
-                {resultData.image && (
-                    <Box display="flex" justifyContent="center" mt="4">
-                        <Image src={`https://product.starbucks.co.jp${resultData.image}`} alt="Drink Image" boxSize="300px" objectFit="cover" />
+                <Card>
+                    {resultData.image && (
+                        <Box display="flex" justifyContent="center" mt="4">
+                            <Image src={`https://product.starbucks.co.jp${resultData.image}`} alt="Drink Image" boxSize="300px" objectFit="cover" />
+                        </Box>
+                    )}
+                    <Text fontSize="2xl" textAlign="center" mt="4">{resultData.drink_name} ({resultData.size})</Text>
+                    <Box padding="20px" boxShadow="lg" borderRadius="md" maxWidth="400px" margin="auto" mt="4">
+                        <strong>説明:</strong> {descriptionWithoutHtml}
                     </Box>
-                )}
-                <Text fontSize="2xl" textAlign="center" mt="4">{resultData.drink_name} ({resultData.size})</Text>
-                <Box padding="20px" boxShadow="lg" borderRadius="md" maxWidth="400px" margin="auto" mt="4">
-                    <strong>説明:</strong> {descriptionWithoutHtml}
-                </Box>
-                <Text fontSize="xl" textAlign="center" mt="4">カロリー: {resultData.calorie} kcal</Text>
-                <Flex justifyContent="center" mt="4">
-                    <Button colorScheme="blue" as="a" href="/Analyze" mx="2">再診断</Button>
-                    <Button colorScheme="green" onClick={() => router.push('/Custom')} mx="2">カスタムを編集</Button>
-                    <Button colorScheme="teal" onClick={handleDrinkThis} mx="2">これを飲む！</Button>
-                </Flex>
-                <Pie data={chartData} />
+                    <Text fontSize="xl" textAlign="center" mt="4">カロリー: {resultData.calorie} kcal</Text>
+                    <Flex justifyContent="center" mt="4">
+                        <Button colorScheme="blue" as="a" href="/Analyze" mx="2">再診断</Button>
+                        <Button colorScheme="green" onClick={() => router.push('/Custom')} mx="2">カスタムを編集</Button>
+                        <Button colorScheme="teal" onClick={handleDrinkThis} mx="2">これを飲む！</Button>
+                    </Flex>
+                    <Pie data={chartData} />
+                </Card>
             </ChakraProvider>
             <Footer />
         </>
@@ -126,3 +129,19 @@ function removeHtmlTags(text: string | null): string {
     if (!text) return '';
     return text.replace(/<[^>]*>?/gm, '');
 }
+
+const Card = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    padding: 20px;
+    width: 100%;
+    max-width: 800px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 40px; /* フッターとの間に隙間を作る */
+`;
