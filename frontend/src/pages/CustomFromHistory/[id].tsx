@@ -101,8 +101,10 @@ const CustomFromHistory = () => {
                         <TitleCustom />
                         <Card>
                             {drink && (
-                                <Box textAlign="center" mt={4}>
-                                    <Image src={`https://product.starbucks.co.jp${drink.image}`} alt={drink.name} boxSize="300px" objectFit="cover" />
+                                <Box display="flex" flexDirection="column" alignItems="center" mt={4}>
+                                    <Box display="flex" justifyContent="center">
+                                        <Image src={`https://product.starbucks.co.jp${drink.image}`} alt={drink.name} boxSize="300px" objectFit="cover" />
+                                    </Box>
                                     <Box textAlign="center" mt="4">
                                         <Text fontSize="2xl">{drink.drink_name} ({drink.size})</Text>
                                     </Box>
