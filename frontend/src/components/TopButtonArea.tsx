@@ -27,6 +27,12 @@ const CenteredButton = styled(Button)`
     margin-top: 8px;
 `;
 
+// ログアウトボタン用のスタイリングを適用
+const LogoutButton = styled(Button)`
+    margin-right: 32px; // 右側のボタンとの隙間を広めに設定
+    margin-top: 8px;
+`;
+
 export const TopButtonArea = () => {
 
     const router = useRouter();
@@ -56,7 +62,7 @@ export const TopButtonArea = () => {
     return (
         <>
         <StyledFlex>
-            <CenteredButton onClick={onOpen}>ログアウト</CenteredButton>
+            <LogoutButton onClick={onOpen}>ログアウト</LogoutButton>
             <CenteredButton onClick={handleHistoryClick}>飲んだ履歴</CenteredButton>
             <CenteredButton onClick={randomAnalyze}>ランダムで診断</CenteredButton>
         </StyledFlex>
