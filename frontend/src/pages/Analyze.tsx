@@ -21,27 +21,22 @@ export default function Analyze() {
     const [commitment, setCommitment] = useState<string>('');
     const [drinkSize, setDrinkSize] = useState<string>('');
 
-    // 予算スライダーが更新されたとき、新しい予算の値をセットする。
     const handleBudgetChange = useCallback((newBudget: number) => {
         setBudget(newBudget);
     }, []);
 
-    // 気分のボタンが押下されたとき、気分の値をセットする。
     const handleFeelingChange = useCallback((newFeeling: string) => {
         setFeeling(newFeeling);
     }, []);
 
-    // こだわりのボタンが押下されたとき、こだわりの値をセットする。
     const handleCommitmentChange = useCallback((newCommitment: string) => {
         setCommitment(newCommitment);
     }, []);
 
-    // ドリンクサイズのボタンが押下されたとき、ドリンクサイズの値をセットする。
     const handleDrinkSizeChange = useCallback((newDrinkSize: string) => {
         setDrinkSize(newDrinkSize);
     }, []);
 
-    // カフェインオフスイッチがONになったとき、カフェインオフスイッチの値をセットする。
     const handleHasNotCaffeineChange = useCallback((newHasNotCaffeine: boolean) => {
         setHasNotCaffeine(newHasNotCaffeine);
     }, []);
@@ -87,4 +82,5 @@ const Card = styled.div`
     border-radius: 10px;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 40px; /* フッターとの間に隙間を作る */
 `;
