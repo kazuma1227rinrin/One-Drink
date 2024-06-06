@@ -6,6 +6,7 @@ const Sdiv = styled.div`
     display: flex;
     justify-content: center; 
     margin-top: 40px; 
+    margin-bottom: 20px;
 `
 
 interface DrinkSizeProps {
