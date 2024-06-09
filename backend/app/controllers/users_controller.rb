@@ -26,7 +26,7 @@ class UsersController < ApplicationController
   private
 
   def set_cors_headers
-    response.set_header('Access-Control-Allow-Origin', '*')
+    response.set_header('Access-Control-Allow-Origin', 'https://one-drink.vercel.app')
   end
 
   # 入力フォームで取得したパラメータ受け取り
