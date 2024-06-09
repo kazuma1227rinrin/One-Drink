@@ -1,4 +1,5 @@
 import '@/styles/globals.css'
+import '@/styles/pagination.css' // ページネーションのスタイルをインポート
 import { SessionProvider } from 'next-auth/react'
 import type { AppProps } from 'next/app'
 import { AuthProvider } from '@/contexts/AuthProvider';  // AuthProvider の正しいパスを指定してください

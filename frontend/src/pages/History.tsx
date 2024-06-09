@@ -21,7 +21,6 @@ import {
     AlertDialogOverlay,
     useDisclosure,
     Switch,
-    Stack,
     SimpleGrid
 } from '@chakra-ui/react';
 import Link from 'next/link';
@@ -69,6 +68,10 @@ const History = () => {
         fetchDrinks();
     }, [userId]);
 
+    useEffect(() => {
+        setCurrentPage(0);  // フィルター変更時にページをリセット
+    }, [showFavorites]);
+
     const handleDelete = async () => {
         if (deleteId) {
             try {
@@ -100,8 +103,9 @@ const History = () => {
     };
 
     const offset = currentPage * drinksPerPage;
-    const currentDrinks = drinks.filter(drink => !showFavorites || drink.isFavoriteFlg).slice(offset, offset + drinksPerPage);
-    const pageCount = Math.ceil(drinks.length / drinksPerPage);
+    const filteredDrinks = drinks.filter(drink => !showFavorites || drink.isFavoriteFlg);
+    const currentDrinks = filteredDrinks.slice(offset, offset + drinksPerPage);
+    const pageCount = Math.ceil(filteredDrinks.length / drinksPerPage);
 
     return (
         <ProtectedPage>
@@ -194,6 +198,14 @@ const History = () => {
                                     onPageChange={handlePageClick}
                                     containerClassName={'pagination'}
                                     activeClassName={'active'}
+                                    pageClassName={'page-item'}
+                                    pageLinkClassName={'page-link'}
+                                    previousClassName={'page-item'}
+                                    previousLinkClassName={'page-link'}
+                                    nextClassName={'page-item'}
+                                    nextLinkClassName={'page-link'}
+                                    // breakClassName={'page-item'}
+                                    breakLinkClassName={'page-link'}
                                 />
                             </Flex>
                         </Box>
