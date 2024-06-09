@@ -98,8 +98,8 @@ const CustomFromHistory = () => {
                 <Header />
                 <ChakraProvider>
                     <Container maxW="container.md" centerContent>
-                        <TitleCustom />
                         <Card>
+                        <TitleCustom />
                             {drink && (
                                 <Box display="flex" flexDirection="column" alignItems="center" mt={4}>
                                     <Box display="flex" justifyContent="center">

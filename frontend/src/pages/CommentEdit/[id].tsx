@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 import { ChakraProvider, Box, Button, Container, Textarea, Image, Text, List, ListItem } from '@chakra-ui/react';
 import ProtectedPage from '@/components/ProtectedPage';
+import styled from 'styled-components';
 
 interface Custom {
   id: number;
@@ -70,24 +71,26 @@ const CommentEdit = () => {
       <Header />
       <ChakraProvider>
         <Container maxW="container.md" centerContent>
-          <TitleComment/>
-          {drinkDetails.image && (
-            <Image src={`https://product.starbucks.co.jp${drinkDetails.image}`} alt="Drink Image" boxSize="300px" mt="4" />
-          )}
-          <Text fontSize="2xl" mt="4">{`${drinkDetails.drink_name} (${drinkDetails.size})`}</Text>
-          {drinkDetails.customs.length > 0 && (
-            <Box mt="4">
-              <List spacing={2}>
-                {drinkDetails.customs.map(custom => (
-                  <ListItem key={custom.id}>{custom.name}</ListItem>
-                ))}
-              </List>
+          <Card>
+            <TitleComment/>
+            {drinkDetails.image && (
+              <Image src={`https://product.starbucks.co.jp${drinkDetails.image}`} alt="Drink Image" boxSize="300px" mt="4" />
+            )}
+            <Text fontSize="2xl" mt="4">{`${drinkDetails.drink_name} (${drinkDetails.size})`}</Text>
+            {drinkDetails.customs.length > 0 && (
+              <Box mt="4">
+                <List spacing={2}>
+                  {drinkDetails.customs.map(custom => (
+                    <ListItem key={custom.id}>{custom.name}</ListItem>
+                  ))}
+                </List>
+              </Box>
+            )}
+            <Box mt="4" width="100%">
+              <Textarea value={drinkDetails.comment} onChange={(e) => setDrinkDetails({ ...drinkDetails, comment: e.target.value })} placeholder="このドリンクにコメントを書こう！" />
             </Box>
-          )}          
-          <Box mt="4" width="100%">
-            <Textarea value={drinkDetails.comment} onChange={(e) => setDrinkDetails({ ...drinkDetails, comment: e.target.value })} placeholder="このドリンクにコメントを書こう！" />
-          </Box>
-          <Button mt="4" colorScheme="blue" onClick={handleSaveComment}>コメントを保存する</Button>
+            <Button mt="4" colorScheme="blue" onClick={handleSaveComment}>コメントを保存する</Button>
+          </Card>
         </Container>
       </ChakraProvider>
       <Footer />
@@ -97,3 +100,19 @@ const CommentEdit = () => {
 };
 
 export default CommentEdit;
+
+const Card = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+  padding: 20px;
+  width: 100%;
+  max-width: 800px;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 40px;
+`;

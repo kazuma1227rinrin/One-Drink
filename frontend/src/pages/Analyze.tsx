@@ -46,9 +46,10 @@ export default function Analyze() {
             <>
                 <Header />
                 <ChakraProvider>
+                    <Card>
                     <TopButtonArea />
                     <Title />
-                    <Card>
+
                         <BudgetSlider onChange={handleBudgetChange} />
                         <Caffeine onChange={handleHasNotCaffeineChange} />
                         <Feeling onChange={handleFeelingChange} />

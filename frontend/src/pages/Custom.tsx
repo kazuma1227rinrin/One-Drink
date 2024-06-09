@@ -85,8 +85,8 @@ const Custom = () => {
             <>
                 <Header />
                 <ChakraProvider>
-                    <TitleCustom />
                     <Card>
+                    <TitleCustom />
                         {resultData.image && (
                             <Box display="flex" justifyContent="center" mt="4">
                                 <Image src={`https://product.starbucks.co.jp${resultData.image}`} alt="Drink Image" boxSize="300px" objectFit="cover" />
