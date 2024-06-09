@@ -39,7 +39,7 @@ module Mouretsu
           headers: :any,
           methods: [:get, :post, :put, :patch, :delete, :options, :head],
           expose: ['Access-Control-Allow-Origin'], # レスポンスヘッダーに追加するヘッダー
-          max_age: 600
+          max_age: 600,
           credentials: true
       end
     end
