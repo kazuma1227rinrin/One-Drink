@@ -20,7 +20,9 @@ import {
     AlertDialogContent,
     AlertDialogOverlay,
     useDisclosure,
-    Switch
+    Switch,
+    Stack,
+    SimpleGrid
 } from '@chakra-ui/react';
 import Link from 'next/link';
 import axios from 'axios';
@@ -28,6 +30,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthProvider';
 import { CloseIcon, StarIcon } from '@chakra-ui/icons';
 import ProtectedPage from '@/components/ProtectedPage';
+import ReactPaginate from 'react-paginate';
 
 interface Drink {
     id: string;
@@ -44,6 +47,8 @@ interface Drink {
 
 const History = () => {
     const [drinks, setDrinks] = useState<Drink[]>([]);
+    const [currentPage, setCurrentPage] = useState(0);
+    const drinksPerPage = 5;
     const { userId } = useAuth();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -90,85 +95,109 @@ const History = () => {
         }
     };
 
+    const handlePageClick = ({ selected }: { selected: number }) => {
+        setCurrentPage(selected);
+    };
+
+    const offset = currentPage * drinksPerPage;
+    const currentDrinks = drinks.filter(drink => !showFavorites || drink.isFavoriteFlg).slice(offset, offset + drinksPerPage);
+    const pageCount = Math.ceil(drinks.length / drinksPerPage);
+
     return (
         <ProtectedPage>
             <>
                 <Header />
                 <ChakraProvider>
-                    <Container>
-                        <Link href="/Analyze" passHref>
-                            <Button as="a">診断画面に戻る</Button>
-                        </Link>
-                        <TitleHistory />
-                        <Flex justifyContent="center" alignItems="center" mb={4}>
-                            <Text mr={2}>お気に入りのみ表示:</Text>
-                            <Switch
-                                isChecked={showFavorites}
-                                onChange={(e) => setShowFavorites(e.target.checked)}
-                                colorScheme="teal"
-                            />
-                        </Flex>
-                        <Flex direction="column" alignItems="center" width="100%">
-                            {drinks.filter(drink => !showFavorites || drink.isFavoriteFlg).map(drink => (
-                                <Box 
-                                    position="relative" 
-                                    key={drink.id} 
-                                    p="5" 
-                                    m="2" 
-                                    boxShadow="0 4px 8px rgba(0, 0, 0, 0.1), 0 -4px 8px rgba(0, 0, 0, 0.1)" 
-                                    borderRadius="md" 
-                                    background="white" 
-                                    width="100%" 
-                                    maxWidth="800px"
-                                >
-                                    <IconButton
-                                        aria-label="Delete drink"
-                                        icon={<CloseIcon />}
-                                        colorScheme="gray"
-                                        position="absolute"
-                                        top="1"
-                                        right="1"
-                                        borderRadius="full"
-                                        size="sm"
-                                        onClick={() => { setDeleteId(drink.id); onOpen(); }}
-                                    />
-                                    <IconButton
-                                        aria-label="Toggle favorite"
-                                        icon={<StarIcon />}
-                                        colorScheme={drink.isFavoriteFlg ? "yellow" : "gray"}
-                                        onClick={() => toggleFavorite(drink.id)}
-                                    />
-                                    <HStack align="center" spacing="5">
-                                        <VStack>
-                                            <Image src={`https://product.starbucks.co.jp${drink.image}`} boxSize="150px" alt="商品画像"/>
-                                            <Text fontSize="lg">{drink.name}({drink.size})</Text>
-                                            <Box>
-                                                <Badge colorScheme="green">カロリー: {drink.calories}</Badge>
-                                                <Badge ml="2" colorScheme="blue">タンパク質: {drink.protein}</Badge>
-                                            </Box>
-                                            <Box textAlign="left">
-                                                {drink.customs && drink.customs.map((custom, index) => (
-                                                    <Text key={index}>・{custom}</Text>
-                                                ))}
-                                            </Box>
-                                            <Link href={`/CustomFromHistory/${drink.id}`} passHref>
-                                                <Button as="a" colorScheme="blue">カスタム編集</Button>
-                                            </Link>
-                                        </VStack>
-                                        <VStack align="start" width="100%" maxW="600px">
-                                            <Text fontSize="md" fontStyle="italic">商品説明: {removeHtmlTags(drink.description)}</Text>
-                                            {drink.comments && <Text fontSize="md" fontStyle="italic">コメント: {drink.comments}</Text>}
-                                            <HStack spacing="10" align="right">
-                                                <Link href={`/CommentEdit/${drink.id}`} passHref>
-                                                    <Button as="a" colorScheme="green">コメント編集</Button>
+                    <MainContainer>
+                        <Box p="5" m="2" boxShadow="0 4px 8px rgba(0, 0, 0, 0.1)" borderRadius="md" background="white" width="100%" maxWidth="800px">
+                            <Link href="/Analyze" passHref>
+                                <Button as="a" mb={4}>診断画面に戻る</Button>
+                            </Link>
+                            <TitleHistory />
+                            <Flex justifyContent="center" alignItems="center" mb={4}>
+                                <Text mr={2}>お気に入りのみ表示:</Text>
+                                <Switch
+                                    isChecked={showFavorites}
+                                    onChange={(e) => setShowFavorites(e.target.checked)}
+                                    colorScheme="teal"
+                                />
+                            </Flex>
+                            <SimpleGrid columns={1} spacing={4}>
+                                {currentDrinks.map(drink => (
+                                    <Box 
+                                        position="relative" 
+                                        key={drink.id} 
+                                        p="5" 
+                                        m="2" 
+                                        boxShadow="0 4px 8px rgba(0, 0, 0, 0.1)" 
+                                        borderRadius="md" 
+                                        background="white" 
+                                        width="100%" 
+                                        maxWidth="800px"
+                                    >
+                                        <IconButton
+                                            aria-label="Delete drink"
+                                            icon={<CloseIcon />}
+                                            colorScheme="gray"
+                                            position="absolute"
+                                            top="1"
+                                            right="1"
+                                            borderRadius="full"
+                                            size="sm"
+                                            onClick={() => { setDeleteId(drink.id); onOpen(); }}
+                                        />
+                                        <IconButton
+                                            aria-label="Toggle favorite"
+                                            icon={<StarIcon />}
+                                            colorScheme={drink.isFavoriteFlg ? "yellow" : "gray"}
+                                            onClick={() => toggleFavorite(drink.id)}
+                                        />
+                                        <HStack align="center" spacing="5">
+                                            <VStack>
+                                                <Image src={`https://product.starbucks.co.jp${drink.image}`} boxSize="150px" alt="商品画像"/>
+                                                <Text fontSize="lg">{drink.name}({drink.size})</Text>
+                                                <Box>
+                                                    <Badge colorScheme="green">カロリー: {drink.calories}</Badge>
+                                                    <Badge ml="2" colorScheme="blue">タンパク質: {drink.protein}</Badge>
+                                                </Box>
+                                                <Box textAlign="left">
+                                                    {drink.customs && drink.customs.map((custom, index) => (
+                                                        <Text key={index}>・{custom}</Text>
+                                                    ))}
+                                                </Box>
+                                                <Link href={`/CustomFromHistory/${drink.id}`} passHref>
+                                                    <Button as="a" colorScheme="blue">カスタム編集</Button>
                                                 </Link>
-                                            </HStack>
-                                        </VStack>
-                                    </HStack>
-                                </Box>
-                            ))}
-                        </Flex>
-                    </Container>
+                                            </VStack>
+                                            <VStack align="start" width="100%" maxW="600px">
+                                                <Text fontSize="md" fontStyle="italic">商品説明: {removeHtmlTags(drink.description)}</Text>
+                                                {drink.comments && <Text fontSize="md" fontStyle="italic">コメント: {drink.comments}</Text>}
+                                                <HStack spacing="10" align="right">
+                                                    <Link href={`/CommentEdit/${drink.id}`} passHref>
+                                                        <Button as="a" colorScheme="green">コメント編集</Button>
+                                                    </Link>
+                                                </HStack>
+                                            </VStack>
+                                        </HStack>
+                                    </Box>
+                                ))}
+                            </SimpleGrid>
+                            <Flex justifyContent="center" mt={4}>
+                                <ReactPaginate
+                                    previousLabel={'前へ'}
+                                    nextLabel={'次へ'}
+                                    breakLabel={'...'}
+                                    breakClassName={'break-me'}
+                                    pageCount={pageCount}
+                                    marginPagesDisplayed={2}
+                                    pageRangeDisplayed={5}
+                                    onPageChange={handlePageClick}
+                                    containerClassName={'pagination'}
+                                    activeClassName={'active'}
+                                />
+                            </Flex>
+                        </Box>
+                    </MainContainer>
                     <AlertDialog
                         isOpen={isOpen}
                         leastDestructiveRef={cancelRef}
@@ -200,12 +229,12 @@ const History = () => {
     );
 };
 
-const Container = styled.div`
-    width: 100%;
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 0 20px;
+const MainContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: #f9f9f9;
 `;
 
 export default History;
