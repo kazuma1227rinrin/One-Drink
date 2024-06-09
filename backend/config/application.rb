@@ -24,6 +24,13 @@ module Mouretsu
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
 
+    config.action_dispatch.default_headers = {
+      'Access-Control-Allow-Origin' => 'https://one-drink.vercel.app',
+      'Access-Control-Allow-Methods' => 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers' => 'Origin, Content-Type, Accept, Authorization',
+      'Access-Control-Allow-Credentials' => 'true'
+    }    
+
     # CORS設定を追加
     # config.middleware.insert_before 0, Rack::Cors do
     #   allow do
