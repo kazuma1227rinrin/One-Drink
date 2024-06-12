@@ -145,7 +145,25 @@ export default function SignUpScreen() {
                 </FormControl>
 
                 <FormControl isInvalid={Boolean(errors.password)}>
-                  <FormLabel htmlFor='password'>パスワード</FormLabel>
+                  <Flex alignItems="center">
+                    <FormLabel htmlFor='password' mb="0">パスワード</FormLabel>
+                    <Tooltip
+                      label={
+                        <div style={{ textAlign: 'left' }}>
+                          ・8文字以上<br />
+                          ・50文字以下<br />
+                          ・大文字必須<br />
+                          ・半角英数字
+                        </div>
+                      }
+                      aria-label="パスワード説明"
+                      hasArrow
+                    >
+                      <IconButton>
+                        <InfoOutlineIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </Flex>
                   <InputGroup size='md'>
                     <Input
                       pr='4.5rem'
@@ -171,22 +189,6 @@ export default function SignUpScreen() {
                         {password ? 'Hide' : 'Show'}
                       </Button>
                     </InputRightElement>
-                    <Tooltip
-                      label={
-                        <div style={{ textAlign: 'left' }}>
-                          ・8文字以上<br />
-                          ・50文字以下<br />
-                          ・大文字必須<br />
-                          ・半角英数字
-                        </div>
-                      }
-                      aria-label="パスワード説明"
-                      hasArrow
-                    >
-                      <IconButton>
-                        <InfoOutlineIcon />
-                      </IconButton>
-                    </Tooltip>
                   </InputGroup>
                   <FormErrorMessage>
                     {errors.password && errors.password.message}
@@ -274,7 +276,4 @@ const IconButton = styled.div`
     color: #2b6cb0; /* ホバー時の色 */
   }
   margin-left: 8px; /* パスワード入力フォームとの間にスペースを作る */
-  position: relative;
-  top: -32px; /* アイコンの位置を調整する */
-  right: -10px; /* アイコンの位置を調整する */
 `;
