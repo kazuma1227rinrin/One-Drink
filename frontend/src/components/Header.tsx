@@ -2,76 +2,78 @@ import { useEffect, useState, useRef } from 'react';
 import { styled } from "styled-components";
 import { useAuth } from '@/contexts/AuthProvider';
 import { useRouter } from 'next/router';
-import { 
-    Button, 
-    useDisclosure, 
-    AlertDialog, 
-    AlertDialogBody, 
-    AlertDialogFooter, 
-    AlertDialogHeader, 
-    AlertDialogContent, 
-    AlertDialogOverlay  
-} from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import { logout } from '@/lib/firebase/apis/auth';
+import {
+    useDisclosure,
+    AlertDialog,
+    AlertDialogBody,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogContent,
+    AlertDialogOverlay,
+} from '@chakra-ui/react';
 
 export const Header = () => {
     const { userName } = useAuth();
     const router = useRouter();
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const cancelRef = useRef<HTMLButtonElement>(null);
+    const cancelRef = useRef(null);
 
     // ユーザ名を表示しないページのパス
     const hideUserNamePaths = ['/', '/Signup'];
 
     // ログアウト処理
     const handleLogout = async () => {
+        onOpen(); // ポップアップを開く
+    };
+
+    const handleLogoutAndClose = async () => {
         const result = await logout();
         if (result.isSuccess) {
             router.push('/');
         } else {
             alert(result.message); // エラーメッセージを表示
         }
+        onClose(); // ポップアップを閉じる
     };
 
     return (
-        <SHeader id="header">
-            <SLeftArea>
-                {!hideUserNamePaths.includes(router.pathname) && userName && <SUserName>{userName}のページ</SUserName>}
-            </SLeftArea>
-            <STitle>One Drink</STitle>
-            <SRightArea>
-                {!hideUserNamePaths.includes(router.pathname) && (
-                    <SLogoutButton onClick={onOpen}>ログアウト</SLogoutButton>
-                )}
-                <AlertDialog
-                    isOpen={isOpen}
-                    leastDestructiveRef={cancelRef}
-                    onClose={onClose}
-                >
-                    <SCenteredOverlay>
-                        <SAlertDialogContent>
-                            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                                ログアウト確認
-                            </AlertDialogHeader>
-                            <AlertDialogBody>
-                                ログアウトしてもよろしいですか？
-                            </AlertDialogBody>
-                            <AlertDialogFooter>
-                                <Button ref={cancelRef} onClick={onClose}>
-                                    キャンセル
-                                </Button>
-                                <Button colorScheme="red" onClick={() => {
-                                    handleLogout();
-                                    onClose();
-                                }} ml={3}>
-                                    ログアウト
-                                </Button>
-                            </AlertDialogFooter>
-                        </SAlertDialogContent>
-                    </SCenteredOverlay>
-                </AlertDialog>
-            </SRightArea>
-        </SHeader>
+        <>
+            <SHeader id="header">
+                <SLeftArea>
+                    {!hideUserNamePaths.includes(router.pathname) && userName && <SUserName>{userName}のページ</SUserName>}
+                </SLeftArea>
+                <STitle>One Drink</STitle>
+                <SRightArea>
+                    {!hideUserNamePaths.includes(router.pathname) && (
+                        <SLogoutButton onClick={handleLogout}>ログアウト</SLogoutButton>
+                    )}
+                </SRightArea>
+            </SHeader>
+            <AlertDialog
+                isOpen={isOpen}
+                onClose={onClose}
+                leastDestructiveRef={cancelRef}
+            >
+                <AlertDialogOverlay>
+                    <AlertDialogContent>
+                        <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                            ログアウト確認
+                        </AlertDialogHeader>
+                        <AlertDialogBody>
+                            ログアウトしますか？
+                        </AlertDialogBody>
+                        <AlertDialogFooter>
+                            <Button ref={cancelRef} onClick={onClose}>キャンセル</Button>
+                            <Button colorScheme="red" onClick={handleLogoutAndClose} ml={3}>
+                                ログアウト
+                            </Button>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialogOverlay>
+            </AlertDialog>
+        </>
     );
 }
 
@@ -118,15 +120,3 @@ const SLogoutButton = styled(Button)`
         background-color: #45a049;
     }
 `;
-
-const SCenteredOverlay = styled(AlertDialogOverlay)`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-`;
-
-const SAlertDialogContent = styled(AlertDialogContent)`
-    max-width: 500px;
-    width: 90%;
-`;
-
