@@ -174,8 +174,8 @@ const History = () => {
                                                 </Link>
                                             </VStack>
                                             <VStack align="start" width="100%" maxW="600px">
-                                                <Text fontSize="md" fontStyle="italic">商品説明: {removeHtmlTags(drink.description)}</Text>
-                                                {drink.comments && <Text fontSize="md" fontStyle="italic">コメント: {drink.comments}</Text>}
+                                                <Text fontSize="md" fontStyle="italic"><span style={{ fontSize: '1.25em', fontWeight: 'bold' }}>商品説明:</span> {removeHtmlTags(drink.description)}</Text>
+                                                {drink.comments && <Text fontSize="md" fontStyle="italic"><span style={{ fontSize: '1.25em', fontWeight: 'bold' }}>コメント:</span> {drink.comments}</Text>}
                                                 <HStack spacing="10" align="right">
                                                     <Link href={`/CommentEdit/${drink.id}`} passHref>
                                                         <Button as="a" colorScheme="green">コメント編集</Button>
@@ -205,7 +205,6 @@ const History = () => {
                                         previousLinkClassName={'page-link'}
                                         nextClassName={'page-item'}
                                         nextLinkClassName={'page-link'}
-                                        // breakClassName={'page-item'}
                                         breakLinkClassName={'page-link'}
                                     />
                                 </Flex>
