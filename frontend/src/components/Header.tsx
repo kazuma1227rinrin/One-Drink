@@ -109,10 +109,13 @@ const SRightArea = styled.div`
 `;
 
 const SLogoutButton = styled(Button)`
-    background-color: #ff4b5c;
+    background-color: #4CAF50;
     color: white;
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-size: 14px;
     &:hover {
-        background-color: #ff7878;
+        background-color: #45a049;
     }
 `;
 
