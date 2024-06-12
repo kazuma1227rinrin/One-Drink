@@ -18,7 +18,11 @@ import {
   VStack,
   ChakraProvider,
   useToast,
+  Tooltip,
+  Icon,
 } from '@chakra-ui/react';
+import { InfoOutlineIcon } from "@chakra-ui/icons";
+import styled from "styled-components";
 import { signUpWithEmail } from '@/lib/firebase/apis/auth';
 import { FirebaseResult } from '@/lib/firebase/apis/auth';
 import { useAuth } from '@/contexts/AuthProvider';
@@ -167,6 +171,22 @@ export default function SignUpScreen() {
                         {password ? 'Hide' : 'Show'}
                       </Button>
                     </InputRightElement>
+                    <Tooltip
+                      label={
+                        <div style={{ textAlign: 'left' }}>
+                          ・8文字以上<br />
+                          ・50文字以下<br />
+                          ・大文字必須<br />
+                          ・半角英数字
+                        </div>
+                      }
+                      aria-label="パスワード説明"
+                      hasArrow
+                    >
+                      <IconButton>
+                        <InfoOutlineIcon />
+                      </IconButton>
+                    </Tooltip>
                   </InputGroup>
                   <FormErrorMessage>
                     {errors.password && errors.password.message}
@@ -243,3 +263,15 @@ export default function SignUpScreen() {
     </>
   );
 }
+
+const IconButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #3182ce; /* アイコンの色 */
+  &:hover {
+    color: #2b6cb0; /* ホバー時の色 */
+  }
+  margin-left: 8px; /* パスワード入力フォームとの間にスペースを作る */
+`;
