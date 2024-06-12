@@ -186,28 +186,30 @@ const History = () => {
                                     </Box>
                                 ))}
                             </SimpleGrid>
-                            <Flex justifyContent="center" mt={4}>
-                                <ReactPaginate
-                                    previousLabel={'前へ'}
-                                    nextLabel={'次へ'}
-                                    breakLabel={'...'}
-                                    breakClassName={'break-me'}
-                                    pageCount={pageCount}
-                                    marginPagesDisplayed={2}
-                                    pageRangeDisplayed={5}
-                                    onPageChange={handlePageClick}
-                                    containerClassName={'pagination'}
-                                    activeClassName={'active'}
-                                    pageClassName={'page-item'}
-                                    pageLinkClassName={'page-link'}
-                                    previousClassName={'page-item'}
-                                    previousLinkClassName={'page-link'}
-                                    nextClassName={'page-item'}
-                                    nextLinkClassName={'page-link'}
-                                    // breakClassName={'page-item'}
-                                    breakLinkClassName={'page-link'}
-                                />
-                            </Flex>
+                            {pageCount > 1 && (
+                                <Flex justifyContent="center" mt={4}>
+                                    <ReactPaginate
+                                        previousLabel={'前へ'}
+                                        nextLabel={'次へ'}
+                                        breakLabel={'...'}
+                                        breakClassName={'break-me'}
+                                        pageCount={pageCount}
+                                        marginPagesDisplayed={2}
+                                        pageRangeDisplayed={5}
+                                        onPageChange={handlePageClick}
+                                        containerClassName={'pagination'}
+                                        activeClassName={'active'}
+                                        pageClassName={'page-item'}
+                                        pageLinkClassName={'page-link'}
+                                        previousClassName={'page-item'}
+                                        previousLinkClassName={'page-link'}
+                                        nextClassName={'page-item'}
+                                        nextLinkClassName={'page-link'}
+                                        // breakClassName={'page-item'}
+                                        breakLinkClassName={'page-link'}
+                                    />
+                                </Flex>
+                            )}
                         </Box>
                     </MainContainer>
                     <AlertDialog
