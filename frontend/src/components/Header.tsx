@@ -48,8 +48,8 @@ export const Header = () => {
                     leastDestructiveRef={cancelRef}
                     onClose={onClose}
                 >
-                    <AlertDialogOverlay>
-                        <AlertDialogContent>
+                    <SCenteredOverlay>
+                        <SAlertDialogContent>
                             <AlertDialogHeader fontSize="lg" fontWeight="bold">
                                 ログアウト確認
                             </AlertDialogHeader>
@@ -67,8 +67,8 @@ export const Header = () => {
                                     ログアウト
                                 </Button>
                             </AlertDialogFooter>
-                        </AlertDialogContent>
-                    </AlertDialogOverlay>
+                        </SAlertDialogContent>
+                    </SCenteredOverlay>
                 </AlertDialog>
             </SRightArea>
         </SHeader>
@@ -115,3 +115,15 @@ const SLogoutButton = styled(Button)`
         background-color: #ff7878;
     }
 `;
+
+const SCenteredOverlay = styled(AlertDialogOverlay)`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+
+const SAlertDialogContent = styled(AlertDialogContent)`
+    max-width: 500px;
+    width: 90%;
+`;
+
