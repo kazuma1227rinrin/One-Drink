@@ -274,4 +274,7 @@ const IconButton = styled.div`
     color: #2b6cb0; /* ホバー時の色 */
   }
   margin-left: 8px; /* パスワード入力フォームとの間にスペースを作る */
+  position: relative;
+  top: -32px; /* アイコンの位置を調整する */
+  right: -10px; /* アイコンの位置を調整する */
 `;
