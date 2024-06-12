@@ -1,20 +1,74 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { styled } from "styled-components";
 import { useAuth } from '@/contexts/AuthProvider';
 import { useRouter } from 'next/router';
+import { 
+    Button, 
+    useDisclosure, 
+    AlertDialog, 
+    AlertDialogBody, 
+    AlertDialogFooter, 
+    AlertDialogHeader, 
+    AlertDialogContent, 
+    AlertDialogOverlay  
+} from "@chakra-ui/react";
+import { logout } from '@/lib/firebase/apis/auth';
 
 export const Header = () => {
     const { userName } = useAuth();
-    const router = useRouter();  // useRouter フックでルート情報を取得
+    const router = useRouter();
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const cancelRef = useRef<HTMLButtonElement>(null);
 
     // ユーザ名を表示しないページのパス
     const hideUserNamePaths = ['/', '/Signup'];
 
+    // ログアウト処理
+    const handleLogout = async () => {
+        const result = await logout();
+        if (result.isSuccess) {
+            router.push('/');
+        } else {
+            alert(result.message); // エラーメッセージを表示
+        }
+    };
+
     return (
         <SHeader id="header">
-            <h1>One Drink</h1>
-            {/* 指定されたパスにいないときのみユーザ名を表示 */}
-            {!hideUserNamePaths.includes(router.pathname) && userName && <SUserName>{userName}のページ</SUserName>}
+            <SLeftArea>
+                <h1>One Drink</h1>
+                {!hideUserNamePaths.includes(router.pathname) && userName && <SUserName>{userName}のページ</SUserName>}
+            </SLeftArea>
+            <SRightArea>
+                <Button onClick={onOpen} colorScheme="red">ログアウト</Button>
+                <AlertDialog
+                    isOpen={isOpen}
+                    leastDestructiveRef={cancelRef}
+                    onClose={onClose}
+                >
+                    <AlertDialogOverlay>
+                        <AlertDialogContent>
+                            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                                ログアウト確認
+                            </AlertDialogHeader>
+                            <AlertDialogBody>
+                                ログアウトしてもよろしいですか？
+                            </AlertDialogBody>
+                            <AlertDialogFooter>
+                                <Button ref={cancelRef} onClick={onClose}>
+                                    キャンセル
+                                </Button>
+                                <Button colorScheme="red" onClick={() => {
+                                    handleLogout();
+                                    onClose();
+                                }} ml={3}>
+                                    ログアウト
+                                </Button>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialogOverlay>
+                </AlertDialog>
+            </SRightArea>
         </SHeader>
     );
 }
@@ -22,16 +76,26 @@ export const Header = () => {
 const SHeader = styled.div`
     background-color: #00704A;
     color: #fff;
-    text-align: center;
     padding: 20px 0;
     font-family: 'Arial', sans-serif;
-    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 `;
 
 const SUserName = styled.div`
-    position: absolute;
-    right: 10px;
-    bottom: 10px;
+    margin-left: 20px;
     font-size: 14px;
     color: #FFFFF0;
+`;
+
+const SLeftArea = styled.div`
+    display: flex;
+    align-items: center;
+`;
+
+const SRightArea = styled.div`
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
 `;
