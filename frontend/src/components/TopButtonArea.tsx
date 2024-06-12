@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 
 // スタイリングされたFlexコンテナを定義
 const StyledFlex = styled(Flex)`
-    justify-content: space-between;
+    justify-content: flex-end;
     width: 100%;
     margin-top: 8px; 
 `;
@@ -28,17 +28,9 @@ export const TopButtonArea = () => {
         router.push('/History');
     };
 
-    // ランダムで診断する関数
-    const randomAnalyze = () => {
-        alert("coming soon...")
-    };
-
     return (
         <StyledFlex>
-            <Flex>
-                <CenteredButton onClick={handleHistoryClick}>飲んだ履歴</CenteredButton>
-                <CenteredButton onClick={randomAnalyze}>ランダムで診断</CenteredButton>
-            </Flex>
+            <CenteredButton onClick={handleHistoryClick}>飲んだ履歴</CenteredButton>
         </StyledFlex>
     )
 }

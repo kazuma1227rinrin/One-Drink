@@ -36,11 +36,13 @@ export const Header = () => {
     return (
         <SHeader id="header">
             <SLeftArea>
-                <h1>One Drink</h1>
                 {!hideUserNamePaths.includes(router.pathname) && userName && <SUserName>{userName}のページ</SUserName>}
             </SLeftArea>
+            <STitle>One Drink</STitle>
             <SRightArea>
-                <Button onClick={onOpen} colorScheme="red">ログアウト</Button>
+                {!hideUserNamePaths.includes(router.pathname) && (
+                    <SLogoutButton onClick={onOpen}>ログアウト</SLogoutButton>
+                )}
                 <AlertDialog
                     isOpen={isOpen}
                     leastDestructiveRef={cancelRef}
@@ -89,6 +91,12 @@ const SUserName = styled.div`
     color: #FFFFF0;
 `;
 
+const STitle = styled.h1`
+    flex-grow: 1;
+    text-align: center;
+    margin: 0;
+`;
+
 const SLeftArea = styled.div`
     display: flex;
     align-items: center;
@@ -98,4 +106,12 @@ const SRightArea = styled.div`
     display: flex;
     align-items: center;
     margin-right: 20px;
+`;
+
+const SLogoutButton = styled(Button)`
+    background-color: #ff4b5c;
+    color: white;
+    &:hover {
+        background-color: #ff7878;
+    }
 `;
