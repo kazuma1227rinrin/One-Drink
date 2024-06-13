@@ -50,8 +50,10 @@ export const Header = () => {
             </SHeader>
             <Popup isOpen={isPopupOpen} onClose={handleClosePopup}>
                 <p>ログアウトしますか？</p>
-                <Button onClick={handleConfirmLogout} colorScheme="red" mr={3}>はい</Button>
-                <Button onClick={handleClosePopup}>いいえ</Button>
+                <ButtonGroup>
+                    <SButton onClick={handleConfirmLogout} colorScheme="red" mr={3}>はい</SButton>
+                    <SButton onClick={handleClosePopup}>いいえ</SButton>
+                </ButtonGroup>
             </Popup>
         </>
     );
@@ -99,4 +101,22 @@ const SLogoutButton = styled(Button)`
     &:hover {
         background-color: #45a049;
     }
+`;
+
+const ButtonGroup = styled.div`
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+`;
+
+const SButton = styled(Button)`
+  background-color: #FF4B2B;
+  color: white;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-size: 14px;
+  &:hover {
+    background-color: #FF3C1A;
+  }
 `;

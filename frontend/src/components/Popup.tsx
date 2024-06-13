@@ -15,7 +15,9 @@ const Popup: FC<PopupProps> = ({ isOpen, onClose, children }) => {
     <SOverlay>
       <SContent>
         {children}
-        <Button onClick={onClose}>閉じる</Button>
+        <ButtonGroup>
+          <SButton onClick={onClose}>閉じる</SButton>
+        </ButtonGroup>
       </SContent>
     </SOverlay>
   );
@@ -35,10 +37,30 @@ const SOverlay = styled.div`
 `;
 
 const SContent = styled.div`
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #6B73FF 0%, #000DFF 100%);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  color: white;
+`;
+
+const ButtonGroup = styled.div`
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+`;
+
+const SButton = styled(Button)`
+  background-color: #FF4B2B;
+  color: white;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-size: 14px;
+  &:hover {
+    background-color: #FF3C1A;
+  }
 `;
 
 export default Popup;
