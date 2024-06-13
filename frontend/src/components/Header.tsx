@@ -1,41 +1,38 @@
-import { useEffect, useState, useRef } from 'react';
+import { useState } from 'react';
 import { styled } from "styled-components";
 import { useAuth } from '@/contexts/AuthProvider';
 import { useRouter } from 'next/router';
 import { Button } from "@chakra-ui/react";
 import { logout } from '@/lib/firebase/apis/auth';
-import {
-    useDisclosure,
-    AlertDialog,
-    AlertDialogBody,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogContent,
-    AlertDialogOverlay,
-} from '@chakra-ui/react';
+import Popup from './Popup'; // ポップアップコンポーネントをインポート
 
 export const Header = () => {
     const { userName } = useAuth();
     const router = useRouter();
-    const { isOpen, onOpen, onClose } = useDisclosure();
-    const cancelRef = useRef(null);
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
 
     // ユーザ名を表示しないページのパス
     const hideUserNamePaths = ['/', '/Signup'];
 
     // ログアウト処理
     const handleLogout = async () => {
-        onOpen(); // ポップアップを開く
+        setIsPopupOpen(true); // ポップアップを表示
     };
 
-    const handleLogoutAndClose = async () => {
+    // ポップアップを閉じる処理
+    const handleClosePopup = () => {
+        setIsPopupOpen(false);
+    };
+
+    // ログアウト確認処理
+    const handleConfirmLogout = async () => {
         const result = await logout();
         if (result.isSuccess) {
             router.push('/');
         } else {
             alert(result.message); // エラーメッセージを表示
         }
-        onClose(); // ポップアップを閉じる
+        setIsPopupOpen(false); // ポップアップを閉じる
     };
 
     return (
@@ -51,28 +48,11 @@ export const Header = () => {
                     )}
                 </SRightArea>
             </SHeader>
-            <AlertDialog
-                isOpen={isOpen}
-                onClose={onClose}
-                leastDestructiveRef={cancelRef}
-            >
-                <AlertDialogOverlay>
-                    <AlertDialogContent>
-                        <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                            ログアウト確認
-                        </AlertDialogHeader>
-                        <AlertDialogBody>
-                            ログアウトしますか？
-                        </AlertDialogBody>
-                        <AlertDialogFooter>
-                            <Button ref={cancelRef} onClick={onClose}>キャンセル</Button>
-                            <Button colorScheme="red" onClick={handleLogoutAndClose} ml={3}>
-                                ログアウト
-                            </Button>
-                        </AlertDialogFooter>
-                    </AlertDialogContent>
-                </AlertDialogOverlay>
-            </AlertDialog>
+            <Popup isOpen={isPopupOpen} onClose={handleClosePopup}>
+                <p>ログアウトしますか？</p>
+                <Button onClick={handleConfirmLogout} colorScheme="red" mr={3}>はい</Button>
+                <Button onClick={handleClosePopup}>いいえ</Button>
+            </Popup>
         </>
     );
 }
