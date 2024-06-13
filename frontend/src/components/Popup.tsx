@@ -1,5 +1,5 @@
 import { FC, ReactNode } from 'react';
-import { styled } from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Button } from "@chakra-ui/react";
 
 interface PopupProps {
@@ -19,10 +19,8 @@ const Popup: FC<PopupProps> = ({ isOpen, onClose, onConfirm, title, children }) 
         <STitle>{title}</STitle>
         <SBody>{children}</SBody>
         <ButtonGroup>
-          <SButton onClick={onClose}>キャンセル</SButton>
-          <SButton onClick={onConfirm} colorScheme="red">
-            ログアウト
-          </SButton>
+          <SButton onClick={onClose} variant="cancel">キャンセル</SButton>
+          <SButton onClick={onConfirm} variant="delete">削除</SButton>
         </ButtonGroup>
       </SContent>
     </SOverlay>
@@ -47,7 +45,7 @@ const SContent = styled.div`
   padding: 30px;
   border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  text-align: center;
+  text-align: left;
   max-width: 400px;
   width: 100%;
 `;
@@ -56,28 +54,41 @@ const STitle = styled.h2`
   font-size: 24px;
   margin-bottom: 20px;
   color: #333;
+  text-align: left;
 `;
 
 const SBody = styled.div`
   font-size: 16px;
   margin-bottom: 20px;
+  text-align: left;
 `;
 
 const ButtonGroup = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 10px;
 `;
 
-const SButton = styled(Button)`
-  background-color: #4CAF50;
-  color: white;
+const SButton = styled(Button)<{ variant?: 'delete' | 'cancel' }>`
   border-radius: 5px;
   padding: 10px 20px;
   font-size: 14px;
-  &:hover {
-    background-color: #45a049;
-  }
+
+  ${({ variant }) => variant === 'delete' && css`
+    background-color: #D34C46;
+    color: white;
+    &:hover {
+      background-color: #b53d37;
+    }
+  `}
+
+  ${({ variant }) => variant === 'cancel' && css`
+    background-color: #EEF2F6;
+    color: black;
+    &:hover {
+      background-color: #E3E8EF;
+    }
+  `}
 `;
 
 export default Popup;
