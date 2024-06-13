@@ -5,18 +5,24 @@ import { Button } from "@chakra-ui/react";
 interface PopupProps {
   isOpen: boolean;
   onClose: () => void;
+  onConfirm: () => void;
+  title: string;
   children: ReactNode;
 }
 
-const Popup: FC<PopupProps> = ({ isOpen, onClose, children }) => {
+const Popup: FC<PopupProps> = ({ isOpen, onClose, onConfirm, title, children }) => {
   if (!isOpen) return null;
 
   return (
     <SOverlay>
       <SContent>
-        {children}
+        <STitle>{title}</STitle>
+        <SBody>{children}</SBody>
         <ButtonGroup>
-          <SButton onClick={onClose}>閉じる</SButton>
+          <SButton onClick={onClose}>キャンセル</SButton>
+          <SButton onClick={onConfirm} colorScheme="red">
+            ログアウト
+          </SButton>
         </ButtonGroup>
       </SContent>
     </SOverlay>
@@ -37,29 +43,40 @@ const SOverlay = styled.div`
 `;
 
 const SContent = styled.div`
-  background: linear-gradient(135deg, #6B73FF 0%, #000DFF 100%);
+  background: white;
   padding: 30px;
-  border-radius: 15px;
+  border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   text-align: center;
-  color: white;
+  max-width: 400px;
+  width: 100%;
+`;
+
+const STitle = styled.h2`
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+`;
+
+const SBody = styled.div`
+  font-size: 16px;
+  margin-bottom: 20px;
 `;
 
 const ButtonGroup = styled.div`
-  margin-top: 20px;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   gap: 10px;
 `;
 
 const SButton = styled(Button)`
-  background-color: #FF4B2B;
+  background-color: #4CAF50;
   color: white;
-  border-radius: 10px;
+  border-radius: 5px;
   padding: 10px 20px;
   font-size: 14px;
   &:hover {
-    background-color: #FF3C1A;
+    background-color: #45a049;
   }
 `;
 

@@ -2,9 +2,9 @@ import { useState, useRef } from 'react';
 import { styled } from "styled-components";
 import { useAuth } from '@/contexts/AuthProvider';
 import { useRouter } from 'next/router';
-import { Button, IconButton, AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay, useDisclosure } from "@chakra-ui/react";
+import { Button, useDisclosure } from "@chakra-ui/react";
 import { logout } from '@/lib/firebase/apis/auth';
-import { CloseIcon } from '@chakra-ui/icons';
+import Popup from './Popup'; // ポップアップコンポーネントをインポート
 
 export const Header = () => {
     const { userName } = useAuth();
@@ -44,30 +44,14 @@ export const Header = () => {
                     )}
                 </SRightArea>
             </SHeader>
-            <AlertDialog
+            <Popup
                 isOpen={isOpen}
-                leastDestructiveRef={cancelRef}
                 onClose={onClose}
+                onConfirm={handleConfirmLogout}
+                title="ログアウト確認"
             >
-                <AlertDialogOverlay>
-                    <AlertDialogContent>
-                        <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                            ログアウト確認
-                        </AlertDialogHeader>
-                        <AlertDialogBody>
-                            ログアウトしてもよろしいですか？
-                        </AlertDialogBody>
-                        <AlertDialogFooter>
-                            <Button ref={cancelRef} onClick={onClose}>
-                                キャンセル
-                            </Button>
-                            <Button colorScheme="red" onClick={handleConfirmLogout} ml={3}>
-                                ログアウト
-                            </Button>
-                        </AlertDialogFooter>
-                    </AlertDialogContent>
-                </AlertDialogOverlay>
-            </AlertDialog>
+                ログアウトしてもよろしいですか？
+            </Popup>
         </>
     );
 }
