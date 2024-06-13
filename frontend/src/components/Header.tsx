@@ -1,27 +1,23 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { styled } from "styled-components";
 import { useAuth } from '@/contexts/AuthProvider';
 import { useRouter } from 'next/router';
-import { Button } from "@chakra-ui/react";
+import { Button, IconButton, AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay, useDisclosure } from "@chakra-ui/react";
 import { logout } from '@/lib/firebase/apis/auth';
-import Popup from './Popup'; // ポップアップコンポーネントをインポート
+import { CloseIcon } from '@chakra-ui/icons';
 
 export const Header = () => {
     const { userName } = useAuth();
     const router = useRouter();
-    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const cancelRef = useRef<HTMLButtonElement>(null);
 
     // ユーザ名を表示しないページのパス
     const hideUserNamePaths = ['/', '/Signup'];
 
     // ログアウト処理
-    const handleLogout = async () => {
-        setIsPopupOpen(true); // ポップアップを表示
-    };
-
-    // ポップアップを閉じる処理
-    const handleClosePopup = () => {
-        setIsPopupOpen(false);
+    const handleLogout = () => {
+        onOpen(); // ポップアップを表示
     };
 
     // ログアウト確認処理
@@ -32,7 +28,7 @@ export const Header = () => {
         } else {
             alert(result.message); // エラーメッセージを表示
         }
-        setIsPopupOpen(false); // ポップアップを閉じる
+        onClose(); // ポップアップを閉じる
     };
 
     return (
@@ -48,13 +44,30 @@ export const Header = () => {
                     )}
                 </SRightArea>
             </SHeader>
-            <Popup isOpen={isPopupOpen} onClose={handleClosePopup}>
-                <p>ログアウトしますか？</p>
-                <ButtonGroup>
-                    <SButton onClick={handleConfirmLogout} colorScheme="red" mr={3}>はい</SButton>
-                    <SButton onClick={handleClosePopup}>いいえ</SButton>
-                </ButtonGroup>
-            </Popup>
+            <AlertDialog
+                isOpen={isOpen}
+                leastDestructiveRef={cancelRef}
+                onClose={onClose}
+            >
+                <AlertDialogOverlay>
+                    <AlertDialogContent>
+                        <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                            ログアウト確認
+                        </AlertDialogHeader>
+                        <AlertDialogBody>
+                            ログアウトしてもよろしいですか？
+                        </AlertDialogBody>
+                        <AlertDialogFooter>
+                            <Button ref={cancelRef} onClick={onClose}>
+                                キャンセル
+                            </Button>
+                            <Button colorScheme="red" onClick={handleConfirmLogout} ml={3}>
+                                ログアウト
+                            </Button>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialogOverlay>
+            </AlertDialog>
         </>
     );
 }
@@ -101,22 +114,4 @@ const SLogoutButton = styled(Button)`
     &:hover {
         background-color: #45a049;
     }
-`;
-
-const ButtonGroup = styled.div`
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-`;
-
-const SButton = styled(Button)`
-  background-color: #FF4B2B;
-  color: white;
-  border-radius: 10px;
-  padding: 10px 20px;
-  font-size: 14px;
-  &:hover {
-    background-color: #FF3C1A;
-  }
 `;
