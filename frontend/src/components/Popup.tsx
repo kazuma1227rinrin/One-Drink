@@ -20,7 +20,7 @@ const Popup: FC<PopupProps> = ({ isOpen, onClose, onConfirm, title, children }) 
         <SBody>{children}</SBody>
         <ButtonGroup>
           <SButton onClick={onClose} variant="cancel">キャンセル</SButton>
-          <SButton onClick={onConfirm} variant="delete">削除</SButton>
+          <SButton onClick={onConfirm} variant="delete">ログアウト</SButton>
         </ButtonGroup>
       </SContent>
     </SOverlay>
