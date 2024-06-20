@@ -67,7 +67,7 @@ export default function SignUpScreen() {
           isClosable: true,
         });
         setTimeout(() => {
-          router.push('/Analyze');
+          router.push('/');
         }, 2000);
       } else {
         console.log('新規登録失敗');
