@@ -46,7 +46,7 @@ export default function SignUpScreen() {
 
   const [password, setPassword] = useState(false);
   const [confirm, setConfirm] = useState(false);
-  const { setUserName } = useAuth();
+  const { setUserId, setUserName } = useAuth();
 
   const onSubmit = handleSubmit(async (data) => {
     await signUpWithEmail({
@@ -56,6 +56,7 @@ export default function SignUpScreen() {
       name: data.name
     }).then((res: FirebaseResult) => {
       if (res.isSuccess) {
+        setUserId(res.userId ?? null);
         setUserName(data.name);
         console.log('新規登録成功');
         toast({

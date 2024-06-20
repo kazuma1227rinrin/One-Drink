@@ -85,7 +85,7 @@ export const signInWithEmail = async (args: { email: string; password: string })
  * @param password
  * @param passwordConfirmation
  * @param name
- * @returns Promise<boolean>
+ * @returns Promise<FirebaseResult>
  */
 export const signUpWithEmail = async (args: { email: string; password: string; passwordConfirmation: string; name: string }): Promise<FirebaseResult> => {
   let result: FirebaseResult = { isSuccess: false, message: '新規登録に失敗しました' };
@@ -106,7 +106,9 @@ export const signUpWithEmail = async (args: { email: string; password: string; p
       const userCredential = await createUserWithEmailAndPassword(auth, args.email, args.password);
       if (userCredential.user) {
         console.log('Firebase registration successful');
-        result = { isSuccess: true, message: '登録に成功しました' };
+        const userId = response.data.id;
+        const userName = response.data.name;
+        result = { isSuccess: true, message: '登録に成功しました', userId, userName };
         return result;
       }
     } else if (response.data && response.data.errors) {
@@ -141,7 +143,7 @@ export const signUpWithEmail = async (args: { email: string; password: string; p
 
 /**
  * ログアウト処理
- * @returns Promise<boolean>
+ * @returns Promise<FirebaseResult>
  */
 export const logout = async (): Promise<FirebaseResult> => {
   let result: FirebaseResult = { isSuccess: false, message: '' };
