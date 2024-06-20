@@ -75,7 +75,7 @@ One Drinkを実装していく中でまとめた資料のリスト
 <!-- Treeコマンドを使ってディレクトリ構成を記載 -->
 <!-- まだファイル構成は未完成です -->
 
-❯ tree -a -I "node_modules|.next|.git|.pytest_cache|static" -L 2
+
 <pre>
 .
 ├── frontend
