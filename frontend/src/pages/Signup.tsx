@@ -135,7 +135,7 @@ export default function SignUpScreen() {
                         message: '50文字以内で入力してください',
                       },
                       pattern: {
-                        value: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@+[a-zA-Z0-9-]+\.+[a-zA-Z0-9-]+$/,
+                        value: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$/,
                         message: 'メールアドレスの形式が違います',
                       },
                     })}
