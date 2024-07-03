@@ -1,10 +1,9 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import React, { useState } from 'react';
-import Link from 'next/link'
-import NextLink from 'next/link'
-import { useForm } from 'react-hook-form'
-import { useRouter } from 'next/router'
+import NextLink from 'next/link';
+import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/router';
 import {
   Button,
   Flex,
@@ -18,20 +17,24 @@ import {
   VStack,
   ChakraProvider,
   useToast,
+  Tooltip,
+  Icon,
 } from '@chakra-ui/react';
+import { InfoOutlineIcon } from "@chakra-ui/icons";
+import styled from 'styled-components';
 import { signInWithEmail, FirebaseResult } from '@/lib/firebase/apis/auth';
 import { useAuth } from '@/contexts/AuthProvider';
 
 type formInputs = {
   email: string;
   password: string;
-}
+};
 
 export default function Home() {
-  const toast = useToast()
-  const router = useRouter()
-  const { 
-    handleSubmit, 
+  const toast = useToast();
+  const router = useRouter();
+  const {
+    handleSubmit,
     register,
     formState: { errors, isSubmitting },
   } = useForm<formInputs>();
@@ -48,31 +51,30 @@ export default function Home() {
       if (res.isSuccess) {
         setUserId(res.userId ?? null);
         setUserName(res.userName ?? null);
-        console.log('ログイン成功')
+        console.log('ログイン成功');
         toast({
           title: "ログイン成功",
           description: res.message,
           status: "success",
           duration: 1000,
-          isClosable: true
+          isClosable: true,
         });
         setTimeout(() => {
-          router.push('/Analyze');        
-        }, 1000);         
-        
+          router.push('/Analyze');
+        }, 1000);
       } else {
-        console.log('ログイン失敗')
-        console.log('res.message:', res.message)
+        console.log('ログイン失敗');
+        console.log('res.message:', res.message);
         toast({
           title: "ログイン失敗",
           description: res.message,
           status: "error",
           duration: 5000,
-          isClosable: true
-        });        
+          isClosable: true,
+        });
       }
-    })
-  })
+    });
+  });
 
   return (
     <>
@@ -90,18 +92,32 @@ export default function Home() {
             <form onSubmit={onSubmit}>
               <VStack spacing="4" alignItems="left">
                 <FormControl isInvalid={Boolean(errors.email)}>
-                  <FormLabel htmlFor="email" textAlign='start'>
-                    メールアドレス
-                  </FormLabel>
-                  <Input 
-                    id="email" 
+                  <Flex alignItems="center">
+                    <FormLabel htmlFor="email" mb="0">メールアドレス</FormLabel>
+                    <Tooltip
+                      label={
+                        <div style={{ textAlign: 'left' }}>
+                          ゲスト用メールアドレス: guest.user@gmail.com<br />
+                          ゲスト用パスワード: Guest4649
+                        </div>
+                      }
+                      aria-label="ゲスト用ログイン情報"
+                      hasArrow
+                    >
+                      <IconButton>
+                        <InfoOutlineIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </Flex>
+                  <Input
+                    id="email"
                     {...register('email', {
                       required: '必須項目です',
                       maxLength: {
                         value: 50,
                         message: '50文字以内で入力してください',
                       },
-                    })} 
+                    })}
                   />
                   <FormErrorMessage>
                     {errors.email && errors.email.message}
@@ -134,7 +150,7 @@ export default function Home() {
                   <FormErrorMessage>
                     {errors.password && errors.password.message}
                   </FormErrorMessage>
-                </FormControl>              
+                </FormControl>
                 <Button
                   marginTop="4"
                   color="white"
@@ -145,10 +161,10 @@ export default function Home() {
                   _hover={{
                     borderColor: 'transparent',
                     boxShadow: '0 7px 10px rgba(0, 0, 0, 0.3)',
-                  }}                  
+                  }}
                 >
                   ログイン
-                </Button>                
+                </Button>
                 <Button
                   as={NextLink}
                   bg="white"
@@ -158,16 +174,28 @@ export default function Home() {
                   _hover={{
                     borderColor: 'transparent',
                     boxShadow: '0 7px 10px rgba(0, 0, 0, 0.3)',
-                  }}                  
+                  }}
                 >
                   新規登録はこちらから
                 </Button>
               </VStack>
             </form>
           </VStack>
-        </Flex>  
-      </ChakraProvider>        
-      <Footer />      
+        </Flex>
+      </ChakraProvider>
+      <Footer />
     </>
   );
 }
+
+const IconButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #3182ce; /* アイコンの色 */
+  &:hover {
+    color: #2b6cb0; /* ホバー時の色 */
+  }
+  margin-left: 8px; /* パスワード入力フォームとの間にスペースを作る */
+`;
